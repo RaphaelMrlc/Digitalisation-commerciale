@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="slides-format" content="viewport">
+    <title>Digitalisation Domaine Viticole — Équipe Commerciale</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --color-bg: #12060a;
+            --color-bg-deep: #0a0306;
+            --color-surface: #1e0b10;
+            --color-text: #f5eee8;
+            --color-text-secondary: #d4bfb8;
+            --color-text-muted: #8a7068;
+            --color-accent-1: #c0392b;
+            --color-accent-2: #d4a017;
+            --color-accent-3: #8b1a2c;
+            --color-glass-bg: rgba(255,255,255,0.05);
+            --color-glass-border: rgba(255,255,255,0.09);
+            --color-vignette: rgba(0,0,0,0.5);
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+    </style>
+    <style>
+        :root { --color-bg: #12060a; --color-text: #f5eee8; --glow-color-rgb: 192,57,43; }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { background: var(--color-bg); margin: 0; }
+        body { font-family: var(--font-body); color: var(--color-text); overflow: hidden; height: 100vh; width: 100vw; }
+        .deck { width: 100vw; height: 100vh; position: relative; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(0.95); transition: opacity 0.7s ease, transform 0.7s ease; pointer-events: none; overflow: hidden; }
+        .slide.active { opacity: 1; transform: scale(1); pointer-events: all; }
+        .slide > .content { position: relative; z-index: 2; width: 100%; max-width: 1100px; padding: clamp(1.5rem, 3.5vw, 3.5rem); }
+        .nav-controls { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; z-index: 100; background: var(--color-glass-bg); backdrop-filter: blur(10px); padding: 10px 24px; border-radius: 40px; border: 1px solid var(--color-glass-border); }
+        .nav-btn { width: 38px; height: 38px; border: none; background: var(--color-glass-bg); color: var(--color-accent-2); border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+        .nav-btn:hover { background: var(--color-glass-border); }
+        .slide-dots { display: flex; gap: 8px; }
+        .slide-dots .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--color-glass-border); cursor: pointer; transition: background 0.3s, transform 0.3s; }
+        .slide-dots .dot.active { background: var(--color-accent-2); transform: scale(1.3); }
+        .slide-counter { font-size: 0.78rem; color: var(--color-text-muted); min-width: 40px; text-align: center; }
+        .reveal { opacity: 0; transform: translateY(20px); }
+
+        @keyframes float-slow { 0%{transform:translate(0,0) scale(1)} 25%{transform:translate(60px,-50px) scale(1.12)} 50%{transform:translate(-40px,40px) scale(0.9)} 75%{transform:translate(50px,20px) scale(1.08)} 100%{transform:translate(0,0) scale(1)} }
+        @keyframes float-drift { 0%{transform:translate(0,0) scale(1) rotate(0deg)} 33%{transform:translate(-50px,-60px) scale(1.15) rotate(3deg)} 66%{transform:translate(40px,30px) scale(0.88) rotate(-2deg)} 100%{transform:translate(0,0) scale(1) rotate(0deg)} }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+        .gradient-mesh { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(80px); animation: float-slow 10s ease-in-out infinite; }
+        .blob:nth-child(2) { animation: float-drift 14s ease-in-out infinite; }
+        .blob:nth-child(3) { animation: float-slow 18s ease-in-out infinite reverse; }
+        .slide::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); background-repeat:repeat; background-size:256px 256px; opacity:0.03; mix-blend-mode:overlay; }
+        .slide::after { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:radial-gradient(ellipse at center, transparent 50%, var(--color-vignette) 100%); }
+        .text-glow { text-shadow: 0 0 20px rgba(var(--glow-color-rgb),0.5), 0 0 40px rgba(var(--glow-color-rgb),0.2); }
+        @keyframes glow-pulse { 0%,100%{text-shadow:0 0 20px rgba(var(--glow-color-rgb),0.5),0 0 40px rgba(var(--glow-color-rgb),0.2)} 50%{text-shadow:0 0 30px rgba(var(--glow-color-rgb),0.8),0 0 60px rgba(var(--glow-color-rgb),0.3)} }
+        .glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+
+        /* Wine bottle SVG decoration */
+        .wine-deco { opacity: 0.07; position: absolute; right: 4%; top: 50%; transform: translateY(-50%); z-index: 1; }
+
+        /* Need vs Solution columns */
+        .col-need { border-left: 3px solid rgba(192,57,43,0.7); }
+        .col-solution { border-left: 3px solid rgba(212,160,23,0.7); }
+        .need-item { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; }
+        .sol-item { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; }
+        .need-dot { width: 7px; height: 7px; min-width: 7px; border-radius: 50%; background: #c0392b; margin-top: 7px; }
+        .sol-dot { width: 7px; height: 7px; min-width: 7px; border-radius: 50%; background: #d4a017; margin-top: 7px; }
+        .section-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+        .badge-need { background: rgba(192,57,43,0.15); border: 1px solid rgba(192,57,43,0.35); color: #e07060; }
+        .badge-sol { background: rgba(212,160,23,0.15); border: 1px solid rgba(212,160,23,0.35); color: #d4a017; }
+        .divider-v { width: 1px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.1), transparent); align-self: stretch; }
+
+        /* =============================================
+           RESPONSIVE MOBILE — Breakpoints 640px / 390px
+           ============================================= */
+
+        /* Add bottom padding to content to clear the fixed nav */
+        .slide > .content { padding-bottom: clamp(80px, 12vw, 100px); }
+
+        /* Safe area insets for notched phones */
+        .nav-controls {
+            padding-bottom: max(10px, env(safe-area-inset-bottom));
+            bottom: max(18px, env(safe-area-inset-bottom));
+        }
+
+        @media (max-width: 640px) {
+
+            /* Allow slide content to scroll vertically on mobile */
+            .slide {
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                -webkit-overflow-scrolling: touch;
+                justify-content: flex-start !important;
+                padding-top: 0.5rem;
+            }
+
+            /* Content: tighter horizontal padding */
+            .slide > .content {
+                padding: 1rem 0.9rem 90px !important;
+            }
+
+            /* Hide decorative background SVGs — free up space */
+            .wine-deco { display: none !important; }
+
+            /* ── Two-column grid → Single column stack ── */
+            .col-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Hide vertical divider on mobile */
+            .divider-v { display: none !important; }
+
+            /* Visual separation between Besoins and Solutions blocks */
+            .col-solution {
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px solid rgba(255,255,255,0.07);
+            }
+
+            /* Header: reduce gap and emoji size */
+            .slide .content > div[style*="display:flex;align-items:center;gap:14px"] {
+                gap: 10px;
+                margin-bottom: 1.1rem !important;
+            }
+            .slide .content > div[style*="display:flex;align-items:center;gap:14px"] > span {
+                font-size: 1.5rem !important;
+            }
+
+            /* Slide 1 title: smaller emoji, tighter */
+            .slide-1 div[style*="font-size:90px"] {
+                font-size: 56px !important;
+                margin-bottom: 0.6rem !important;
+            }
+
+            /* Reduce item vertical padding on mobile */
+            .need-item, .sol-item { padding: 5px 0; }
+
+            /* Body text slightly smaller on mobile */
+            .need-item p, .sol-item p { font-size: 0.82rem !important; }
+
+            /* Badge: smaller */
+            .section-badge { font-size: 0.65rem !important; margin-bottom: 8px; }
+
+            /* Nav: bigger touch targets, tighter gap */
+            .nav-controls { gap: 10px; padding: 8px 16px; }
+            .nav-btn { width: 44px !important; height: 44px !important; font-size: 1.3rem !important; }
+            .slide-dots { gap: 6px; }
+            .slide-dots .dot { width: 8px; height: 8px; }
+
+            /* Footer tags: wrap gracefully */
+            .slide > .content > div[style*="border-top"] { margin-top: 1rem !important; padding-top: 0.8rem !important; gap: 5px; }
+
+            /* Slide 1 pills: wrap on mobile */
+            .slide-1 div[style*="display:flex;justify-content:center"] { gap: 8px !important; }
+        }
+
+        @media (max-width: 390px) {
+            .need-item p, .sol-item p { font-size: 0.8rem !important; line-height: 1.45 !important; }
+            .slide > .content { padding: 0.8rem 0.75rem 85px !important; }
+        }
+
+        /* Reduce particle count on mobile — handled via JS below */
+        @media (hover: none) {
+            .mouse-spotlight { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="mouse-spotlight" style="position:fixed;inset:0;z-index:99;pointer-events:none;"></div>
+
+<div class="deck">
+
+    <!-- SLIDE 1 : TITRE -->
+    <div class="slide slide-1 active" data-slide="1">
+        <div class="gradient-mesh">
+            <div class="blob" style="width:500px;height:500px;top:-120px;right:-100px;background:#8b1a2c;opacity:0.18;"></div>
+            <div class="blob" style="width:320px;height:320px;bottom:-80px;left:-60px;background:#c0392b;opacity:0.13;"></div>
+            <div class="blob" style="width:220px;height:220px;top:42%;left:12%;background:#d4a017;opacity:0.09;"></div>
+        </div>
+        <canvas class="particle-canvas" style="position:absolute;inset:0;z-index:1;"></canvas>
+        <div class="content text-center">
+            <div style="font-size:90px;margin-bottom:1rem;animation:float 3.5s ease-in-out infinite;" class="reveal">🍷</div>
+            <h1 class="font-display reveal" style="font-size:clamp(2.4rem,5.5vw,4.2rem);font-weight:900;background:linear-gradient(135deg,#c0392b,#d4a017,#c0392b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.02em;margin-bottom:1rem;">Digitalisation Commerciale</h1>
+            <p class="reveal" style="font-size:clamp(0.85rem,1.4vw,1.1rem);color:var(--color-text-muted);letter-spacing:0.3em;text-transform:uppercase;font-weight:300;">Domaine Viticole — Équipe Terrain</p>
+            <div class="reveal" style="margin-top:2rem;display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:8px;background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.25);padding:6px 16px;border-radius:20px;">
+                    <span style="color:#c0392b;font-size:0.75rem;">●</span>
+                    <span style="font-size:0.78rem;color:var(--color-text-secondary);letter-spacing:0.08em;">Besoins identifiés</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;background:rgba(212,160,23,0.12);border:1px solid rgba(212,160,23,0.25);padding:6px 16px;border-radius:20px;">
+                    <span style="color:#d4a017;font-size:0.75rem;">●</span>
+                    <span style="font-size:0.78rem;color:var(--color-text-secondary);letter-spacing:0.08em;">Solutions proposées</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 2 : Prospection & Gestion des Leads -->
+    <div class="slide slide-2" data-slide="2">
+        <div class="gradient-mesh">
+            <div class="blob" style="width:380px;height:380px;top:-100px;right:-80px;background:#8b1a2c;opacity:0.1;"></div>
+            <div class="blob" style="width:260px;height:260px;bottom:-70px;left:-50px;background:#d4a017;opacity:0.07;"></div>
+        </div>
+
+        <!-- Deco SVG target -->
+        <svg class="wine-deco" width="220" height="220" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="46" fill="none" stroke="white" stroke-width="1.5"/>
+            <circle cx="50" cy="50" r="34" fill="none" stroke="white" stroke-width="1"/>
+            <circle cx="50" cy="50" r="20" fill="none" stroke="white" stroke-width="1"/>
+            <circle cx="50" cy="50" r="6" fill="white" opacity="0.6"/>
+            <line x1="4" y1="50" x2="96" y2="50" stroke="white" stroke-width="0.8"/>
+            <line x1="50" y1="4" x2="50" y2="96" stroke="white" stroke-width="0.8"/>
+        </svg>
+
+        <div class="content">
+            <!-- Header -->
+            <div class="reveal" style="display:flex;align-items:center;gap:14px;margin-bottom:1.8rem;">
+                <span style="font-size:2rem;">🎯</span>
+                <div>
+                    <h2 class="font-display" style="font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:700;color:var(--color-text);margin:0;line-height:1.1;">Prospection & Gestion des Leads</h2>
+                    <p style="font-size:0.78rem;color:var(--color-text-muted);letter-spacing:0.12em;text-transform:uppercase;margin:4px 0 0;">Axe 1 — Commerciaux terrain</p>
+                </div>
+            </div>
+
+            <!-- Two columns -->
+            <div class="col-grid" style="display:grid;grid-template-columns:1fr 28px 1fr;gap:0;align-items:start;">
+
+                <!-- LEFT: Besoins -->
+                <div class="reveal col-need" style="padding-left:16px;">
+                    <div class="section-badge badge-need">⚠ Besoins actuels</div>
+
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;">Portefeuille de prospects <strong style="color:var(--color-text);">dispersé</strong> entre canaux — cavistes, CHR, restaurateurs — sans vue centralisée</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;">Pas de <strong style="color:var(--color-text);">segmentation claire</strong> : tous les prospects reçoivent le même traitement, quelle que soit leur maturité</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Relances oubliées</strong> faute de suivi — du CA perdu silencieusement chaque semaine</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;">Création de <strong style="color:var(--color-text);">fiches prospects manuelle</strong> et chronophage après chaque salon ou visite</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;">Aucune <strong style="color:var(--color-text);">visibilité temps réel</strong> pour le directeur commercial sur l'état du pipeline</p>
+                    </div>
+                </div>
+
+                <!-- Vertical divider -->
+                <div class="divider-v reveal" style="margin:0 auto;"></div>
+
+                <!-- RIGHT: Solutions -->
+                <div class="reveal col-solution" style="padding-left:16px;">
+                    <div class="section-badge badge-sol">✦ Solutions proposées</div>
+
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Pipeline visuel unique</strong> avec statuts clairs par segment (à contacter → RDV → devis → commande)</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Création automatique</strong> de fiche prospect depuis un formulaire web ou scan de carte de visite</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Séquences de relance automatiques</strong> déclenchées si aucune activité depuis X jours — email ou SMS selon le profil</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Alerte automatique</strong> si un prospect chaud n'a pas été contacté depuis trop longtemps</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Dashboard DC en temps réel</strong> : CA vs objectif, nb de prospects actifs, taux de transformation</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer tag -->
+            <div class="reveal" style="margin-top:1.4rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;flex-wrap:wrap;">
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">🔗 S'adapte à l'export & GMS ultérieurement</span>
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">⚡ Automatisable via n8n</span>
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">📱 Mobile-first terrain</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 3 : Prise de Commande Terrain -->
+    <div class="slide slide-3" data-slide="3">
+        <div class="gradient-mesh">
+            <div class="blob" style="width:400px;height:400px;top:-90px;left:-80px;background:#8b1a2c;opacity:0.1;"></div>
+            <div class="blob" style="width:280px;height:280px;bottom:-60px;right:-50px;background:#d4a017;opacity:0.08;"></div>
+        </div>
+
+        <!-- Deco: phone/tablet icon -->
+        <svg class="wine-deco" width="200" height="200" viewBox="0 0 100 100" style="right:3%;top:50%;opacity:0.06;">
+            <rect x="28" y="10" width="44" height="80" rx="6" fill="none" stroke="white" stroke-width="2"/>
+            <rect x="34" y="18" width="32" height="52" rx="2" fill="none" stroke="white" stroke-width="1.2"/>
+            <circle cx="50" cy="79" r="3" fill="white" opacity="0.5"/>
+            <line x1="40" y1="26" x2="60" y2="26" stroke="white" stroke-width="1"/>
+            <line x1="36" y1="33" x2="64" y2="33" stroke="white" stroke-width="0.8"/>
+            <line x1="36" y1="39" x2="58" y2="39" stroke="white" stroke-width="0.8"/>
+        </svg>
+
+        <div class="content">
+            <!-- Header -->
+            <div class="reveal" style="display:flex;align-items:center;gap:14px;margin-bottom:1.8rem;">
+                <span style="font-size:2rem;">📱</span>
+                <div>
+                    <h2 class="font-display" style="font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:700;color:var(--color-text);margin:0;line-height:1.1;">Prise de Commande sur le Terrain</h2>
+                    <p style="font-size:0.78rem;color:var(--color-text-muted);letter-spacing:0.12em;text-transform:uppercase;margin:4px 0 0;">Axe 2 — Commerciaux terrain</p>
+                </div>
+            </div>
+
+            <!-- Two columns -->
+            <div class="col-grid" style="display:grid;grid-template-columns:1fr 28px 1fr;gap:0;align-items:start;">
+
+                <!-- LEFT: Besoins -->
+                <div class="reveal col-need" style="padding-left:16px;">
+                    <div class="section-badge badge-need">⚠ Besoins actuels</div>
+
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;">Le commercial <strong style="color:var(--color-text);">note sur papier</strong> chez le client, rentre au bureau, ressaisit — et perd parfois la commande en chemin</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Pas de visibilité sur les stocks</strong> en temps réel : risque de vendre une cuvée épuisée ou un millésime indisponible</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;">Les <strong style="color:var(--color-text);">informations de visite</strong> — préférences, remarques, objections — finissent sur un carnet ou dans la tête</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Logistique et compta informées en retard</strong> : la commande ne remonte qu'au retour au bureau, parfois le lendemain</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Aucun historique client</strong> facilement accessible avant d'entrer chez un prospect</p>
+                    </div>
+                </div>
+
+                <!-- Vertical divider -->
+                <div class="divider-v reveal" style="margin:0 auto;"></div>
+
+                <!-- RIGHT: Solutions -->
+                <div class="reveal col-solution" style="padding-left:16px;">
+                    <div class="section-badge badge-sol">✦ Solutions proposées</div>
+
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Catalogue en temps réel</strong> sur mobile — disponibilités par cuvée et millésime, à jour à la bouteille près</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Mode hors-ligne natif</strong> — l'application reste pleinement fonctionnelle sans réseau (cave, vigne, zone blanche)</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Bon de commande généré et signé</strong> sur tablette en quelques secondes, envoyé au client par email immédiatement</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Transmission automatique</strong> à la logistique et à la compta dès validation — zéro ressaisie, zéro délai</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Compte-rendu de visite rapide</strong> : dictée vocale ou formulaire mobile, historique enrichi en 30 secondes</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer tag -->
+            <div class="reveal" style="margin-top:1.4rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;flex-wrap:wrap;">
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">📶 Fonctionnel sans réseau</span>
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">⚡ Synchro automatique logistique & compta</span>
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">✍️ Signature électronique terrain</span>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- SLIDE 4 : Suivi de la Relation Client -->
+    <div class="slide slide-4" data-slide="4">
+        <div class="gradient-mesh">
+            <div class="blob" style="width:420px;height:420px;top:-100px;right:-90px;background:#c0392b;opacity:0.09;"></div>
+            <div class="blob" style="width:300px;height:300px;bottom:-70px;left:-60px;background:#8b1a2c;opacity:0.11;"></div>
+            <div class="blob" style="width:180px;height:180px;top:35%;right:20%;background:#d4a017;opacity:0.07;"></div>
+        </div>
+
+        <!-- Deco: heart/handshake motif -->
+        <svg class="wine-deco" width="200" height="200" viewBox="0 0 100 100" style="right:3%;top:50%;opacity:0.06;">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="white" stroke-width="1.5"/>
+            <path d="M50 68 C50 68 28 54 28 40 C28 32 34 28 42 32 C46 34 50 38 50 38 C50 38 54 34 58 32 C66 28 72 32 72 40 C72 54 50 68 50 68Z" fill="none" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+            <circle cx="50" cy="50" r="3" fill="white" opacity="0.4"/>
+        </svg>
+
+        <div class="content">
+            <!-- Header -->
+            <div class="reveal" style="display:flex;align-items:center;gap:14px;margin-bottom:1.8rem;">
+                <span style="font-size:2rem;">🤝</span>
+                <div>
+                    <h2 class="font-display" style="font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:700;color:var(--color-text);margin:0;line-height:1.1;">Suivi de la Relation Client</h2>
+                    <p style="font-size:0.78rem;color:var(--color-text-muted);letter-spacing:0.12em;text-transform:uppercase;margin:4px 0 0;">Axe 3 — Le besoin le plus sous-estimé</p>
+                </div>
+            </div>
+
+            <!-- Two columns -->
+            <div class="col-grid" style="display:grid;grid-template-columns:1fr 28px 1fr;gap:0;align-items:start;">
+
+                <!-- LEFT: Besoins -->
+                <div class="reveal col-need" style="padding-left:16px;">
+                    <div class="section-badge badge-need">⚠ Besoins actuels</div>
+
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Aucun historique centralisé</strong> : impossible de savoir ce qu'un client a commandé, à quelle fréquence, à quel prix</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Préférences gustatives non tracées</strong> — le commercial oublie ou ne sait pas que ce client n'aime pas les blancs boisés</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Clients fidèles qui disparaissent</strong> sans qu'on s'en rende compte — aucune alerte si un bon client cesse de commander</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Allocations gérées de tête</strong> : pour les cuvées limitées, qui a été servi en premier, qui attend — aucune trace fiable</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Relances non priorisées</strong> — le commercial ne sait pas chaque matin sur qui concentrer son énergie</p>
+                    </div>
+                </div>
+
+                <!-- Vertical divider -->
+                <div class="divider-v reveal" style="margin:0 auto;"></div>
+
+                <!-- RIGHT: Solutions -->
+                <div class="reveal col-solution" style="padding-left:16px;">
+                    <div class="section-badge badge-sol">✦ Solutions proposées</div>
+
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Fiche client enrichie</strong> : historique complet d'achats (cuvées, millésimes, fréquence) + préférences de dégustation notées</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Alerte automatique</strong> si un client actif n'a pas commandé depuis X semaines — relance personnalisée déclenchée sans action manuelle</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Sortie de millésime → notification ciblée</strong> : les clients qui achètent cette cuvée reçoivent automatiquement un email personnalisé</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Gestion des allocations</strong> : liste d'attente par cuvée, clients prioritaires identifiés, suivi des échantillons envoyés</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Liste de priorités du matin</strong> : chaque commercial reçoit automatiquement qui rappeler, visiter ou relancer aujourd'hui</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer tag -->
+            <div class="reveal" style="margin-top:1.4rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;flex-wrap:wrap;">
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">🍾 Gestion allocations cuvées limitées</span>
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">⚡ Relances 100% automatisées</span>
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">🎯 Personnalisation par client</span>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- SLIDE 5 : Pilotage Commercial & Reporting -->
+    <div class="slide slide-5" data-slide="5">
+        <div class="gradient-mesh">
+            <div class="blob" style="width:450px;height:450px;top:-110px;left:-90px;background:#8b1a2c;opacity:0.09;"></div>
+            <div class="blob" style="width:280px;height:280px;bottom:-60px;right:-50px;background:#c0392b;opacity:0.1;"></div>
+            <div class="blob" style="width:200px;height:200px;top:40%;right:18%;background:#d4a017;opacity:0.08;"></div>
+        </div>
+
+        <!-- Deco: chart bars -->
+        <svg class="wine-deco" width="200" height="200" viewBox="0 0 100 100" style="right:3%;top:50%;opacity:0.06;">
+            <rect x="12" y="55" width="14" height="30" rx="2" fill="white"/>
+            <rect x="32" y="38" width="14" height="47" rx="2" fill="white"/>
+            <rect x="52" y="25" width="14" height="60" rx="2" fill="white"/>
+            <rect x="72" y="44" width="14" height="41" rx="2" fill="white"/>
+            <line x1="8" y1="88" x2="92" y2="88" stroke="white" stroke-width="1.5"/>
+            <polyline points="19,52 39,34 59,20 79,40" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="3,2"/>
+            <circle cx="19" cy="52" r="2.5" fill="white"/>
+            <circle cx="39" cy="34" r="2.5" fill="white"/>
+            <circle cx="59" cy="20" r="2.5" fill="white"/>
+            <circle cx="79" cy="40" r="2.5" fill="white"/>
+        </svg>
+
+        <div class="content">
+            <!-- Header -->
+            <div class="reveal" style="display:flex;align-items:center;gap:14px;margin-bottom:1.6rem;">
+                <span style="font-size:2rem;">📊</span>
+                <div>
+                    <h2 class="font-display" style="font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:700;color:var(--color-text);margin:0;line-height:1.1;">Pilotage Commercial & Reporting</h2>
+                    <p style="font-size:0.78rem;color:var(--color-text-muted);letter-spacing:0.12em;text-transform:uppercase;margin:4px 0 0;">Axe 4 — Vision directeur commercial</p>
+                </div>
+            </div>
+
+            <!-- Two columns -->
+            <div class="col-grid" style="display:grid;grid-template-columns:1fr 28px 1fr;gap:0;align-items:start;">
+
+                <!-- LEFT: Besoins -->
+                <div class="reveal col-need" style="padding-left:16px;">
+                    <div class="section-badge badge-need">⚠ Besoins actuels</div>
+
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;">Connaître l'état réel de l'activité <strong style="color:var(--color-text);">oblige à solliciter chaque commercial</strong> — réunion hebdo ou appel pour avoir les chiffres</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Pas de vue consolidée</strong> CA vs objectifs par commercial, par cuvée, par canal — tout se passe dans des Excel éparpillés</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Taux de transformation et panier moyen</strong> non trackés — les décisions stratégiques se prennent au feeling</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Clients en déclin non identifiés</strong> à temps — on découvre la perte d'un bon client trop tard</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Forecast inexistant</strong> : la production et la logistique ne peuvent pas anticiper les volumes à venir</p>
+                    </div>
+                </div>
+
+                <!-- Vertical divider -->
+                <div class="divider-v reveal" style="margin:0 auto;"></div>
+
+                <!-- RIGHT: Solutions -->
+                <div class="reveal col-solution" style="padding-left:16px;">
+                    <div class="section-badge badge-sol">✦ Solutions proposées</div>
+
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Dashboard temps réel</strong> : CA vs objectifs par commercial, par cuvée, par marché — sans demander à personne</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">KPIs automatiques</strong> : taux de transformation prospects → clients, panier moyen par segment, top clients</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Vision pipeline en cours</strong> : deals actifs, probabilité de closing, valeur potentielle par commercial</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Alerte clients à risque</strong> : détection automatique d'une baisse de fréquence d'achat chez un compte stratégique</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Forecast automatique</strong> basé sur le pipeline — les intentions de commandes remontent à la production et à la logistique</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer tag -->
+            <div class="reveal" style="margin-top:1.4rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;flex-wrap:wrap;">
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">📈 Rapport hebdo automatique envoyé au DC</span>
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">🔗 Connecté à la logistique & production</span>
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">⚡ Zéro Excel manuel</span>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- SLIDE 6 : Devis, Commandes & Documents Commerciaux -->
+    <div class="slide slide-6" data-slide="6">
+        <div class="gradient-mesh">
+            <div class="blob" style="width:400px;height:400px;top:-100px;right:-80px;background:#8b1a2c;opacity:0.1;"></div>
+            <div class="blob" style="width:300px;height:300px;bottom:-70px;left:-50px;background:#d4a017;opacity:0.08;"></div>
+            <div class="blob" style="width:180px;height:180px;top:38%;left:20%;background:#c0392b;opacity:0.07;"></div>
+        </div>
+
+        <!-- Deco: document/contract icon -->
+        <svg class="wine-deco" width="200" height="200" viewBox="0 0 100 100" style="right:3%;top:50%;opacity:0.06;">
+            <rect x="22" y="12" width="56" height="76" rx="4" fill="none" stroke="white" stroke-width="1.8"/>
+            <line x1="32" y1="30" x2="68" y2="30" stroke="white" stroke-width="1.2"/>
+            <line x1="32" y1="40" x2="68" y2="40" stroke="white" stroke-width="1.2"/>
+            <line x1="32" y1="50" x2="55" y2="50" stroke="white" stroke-width="1.2"/>
+            <line x1="32" y1="62" x2="50" y2="62" stroke="white" stroke-width="1.5"/>
+            <path d="M52 68 L58 62 L68 72 L62 78 Z" fill="none" stroke="white" stroke-width="1.2"/>
+            <circle cx="74" cy="20" r="10" fill="none" stroke="white" stroke-width="1.5"/>
+            <polyline points="70,20 73,23 79,17" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+
+        <div class="content">
+            <!-- Header -->
+            <div class="reveal" style="display:flex;align-items:center;gap:14px;margin-bottom:1.6rem;">
+                <span style="font-size:2rem;">📄</span>
+                <div>
+                    <h2 class="font-display" style="font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:700;color:var(--color-text);margin:0;line-height:1.1;">Devis, Commandes & Documents</h2>
+                    <p style="font-size:0.78rem;color:var(--color-text-muted);letter-spacing:0.12em;text-transform:uppercase;margin:4px 0 0;">Axe 5 — Flux documentaire commercial</p>
+                </div>
+            </div>
+
+            <!-- Two columns -->
+            <div class="col-grid" style="display:grid;grid-template-columns:1fr 28px 1fr;gap:0;align-items:start;">
+
+                <!-- LEFT: Besoins -->
+                <div class="reveal col-need" style="padding-left:16px;">
+                    <div class="section-badge badge-need">⚠ Besoins actuels</div>
+
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Devis générés à la main</strong> — le commercial construit chaque proposition depuis zéro, source d'erreurs et de perte de temps</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Tarifs différents selon le canal</strong> (caviste, restaurant, GMS, export) — un mauvais prix envoyé = relation client fragilisée</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Devis → bon de commande</strong> : une nouvelle saisie manuelle, une nouvelle opportunité de se tromper</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Relances de devis non signés</strong> oubliées — des commandes potentielles qui s'évaporent sans suivi</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Documents export générés un par un</strong> : certificats V-I1, certificats d'origine — tâche répétitive et chronophage</p>
+                    </div>
+                </div>
+
+                <!-- Vertical divider -->
+                <div class="divider-v reveal" style="margin:0 auto;"></div>
+
+                <!-- RIGHT: Solutions -->
+                <div class="reveal col-solution" style="padding-left:16px;">
+                    <div class="section-badge badge-sol">✦ Solutions proposées</div>
+
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Catalogue intelligent</strong> sur mobile : disponibilités en temps réel, <strong style="color:var(--color-text);">tarifs automatiquement adaptés</strong> au profil du client (caviste, CHR, export…)</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Devis généré en quelques secondes</strong> depuis le catalogue — envoyé directement au client par email depuis le terrain</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Devis → bon de commande en 1 clic</strong> après acceptation + confirmation automatique envoyée au client</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Relance automatique</strong> si le devis n'est pas signé sous X jours — aucune commande ne tombe dans l'oubli</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Génération automatique des documents export</strong> (certificats V-I1, certificats d'origine) à partir des données de commande</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer tag -->
+            <div class="reveal" style="margin-top:1.4rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;flex-wrap:wrap;">
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">💶 Tarification dynamique par canal</span>
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">✍️ Signature électronique intégrée</span>
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">📋 Prêt pour les docs export (VI-1, certificats d'origine)</span>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- SLIDE 7 : Planification & Optimisation des Tournées -->
+    <div class="slide slide-7" data-slide="7">
+        <div class="gradient-mesh">
+            <div class="blob" style="width:420px;height:420px;top:-100px;left:-80px;background:#c0392b;opacity:0.09;"></div>
+            <div class="blob" style="width:260px;height:260px;bottom:-60px;right:-50px;background:#8b1a2c;opacity:0.1;"></div>
+            <div class="blob" style="width:200px;height:200px;top:42%;right:22%;background:#d4a017;opacity:0.07;"></div>
+        </div>
+
+        <!-- Deco: map/route icon -->
+        <svg class="wine-deco" width="200" height="200" viewBox="0 0 100 100" style="right:3%;top:50%;opacity:0.06;">
+            <circle cx="50" cy="40" r="18" fill="none" stroke="white" stroke-width="1.8"/>
+            <circle cx="50" cy="40" r="6" fill="white" opacity="0.5"/>
+            <path d="M50 58 C50 58 32 72 50 88 C68 72 50 58 50 58Z" fill="none" stroke="white" stroke-width="1.5"/>
+            <circle cx="22" cy="30" r="5" fill="none" stroke="white" stroke-width="1.2"/>
+            <circle cx="78" cy="28" r="5" fill="none" stroke="white" stroke-width="1.2"/>
+            <circle cx="18" cy="70" r="5" fill="none" stroke="white" stroke-width="1.2"/>
+            <polyline points="22,35 30,52 18,65" fill="none" stroke="white" stroke-width="1" stroke-dasharray="3,2"/>
+            <polyline points="78,33 70,50 50,58" fill="none" stroke="white" stroke-width="1" stroke-dasharray="3,2"/>
+        </svg>
+
+        <div class="content">
+            <!-- Header -->
+            <div class="reveal" style="display:flex;align-items:center;gap:14px;margin-bottom:1.6rem;">
+                <span style="font-size:2rem;">🗺️</span>
+                <div>
+                    <h2 class="font-display" style="font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:700;color:var(--color-text);margin:0;line-height:1.1;">Planification & Optimisation des Tournées</h2>
+                    <p style="font-size:0.78rem;color:var(--color-text-muted);letter-spacing:0.12em;text-transform:uppercase;margin:4px 0 0;">Axe 6 — Efficacité terrain au quotidien</p>
+                </div>
+            </div>
+
+            <!-- Two columns -->
+            <div class="col-grid" style="display:grid;grid-template-columns:1fr 28px 1fr;gap:0;align-items:start;">
+
+                <!-- LEFT: Besoins -->
+                <div class="reveal col-need" style="padding-left:16px;">
+                    <div class="section-badge badge-need">⚠ Besoins actuels</div>
+
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Tournées planifiées à la main</strong> — le commercial passe du temps chaque semaine à organiser ses déplacements sans vue d'ensemble</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Circuits inefficaces</strong> : allers-retours inutiles, prospects voisins non visités le même jour faute de vision géographique</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;">Le commercial <strong style="color:var(--color-text);">arrive chez un client sans préparation</strong> — il doit se souvenir de mémoire des dernières interactions et commandes</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Compte-rendu complété de mémoire</strong> au bureau le soir ou le lendemain — informations oubliées, CRM pas à jour</p>
+                    </div>
+                    <div class="need-item">
+                        <div class="need-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Kilomètres et temps perdus</strong> = moins de visites par semaine = moins de CA potentiel</p>
+                    </div>
+                </div>
+
+                <!-- Vertical divider -->
+                <div class="divider-v reveal" style="margin:0 auto;"></div>
+
+                <!-- RIGHT: Solutions -->
+                <div class="reveal col-solution" style="padding-left:16px;">
+                    <div class="section-badge badge-sol">✦ Solutions proposées</div>
+
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Carte interactive</strong> des clients et prospects avec statuts visuels (à contacter, en cours, client actif) et filtres par segment</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Optimisation automatique du circuit</strong> : ordre de visites calculé pour minimiser les kilomètres sur une journée ou une semaine</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Brief automatique avant chaque RDV</strong> : dernière commande, historique, préférences, dernière relance — tout en un coup d'œil</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Compte-rendu par dictée vocale</strong> juste après la visite → transcrit et enregistré automatiquement dans la fiche CRM</p>
+                    </div>
+                    <div class="sol-item">
+                        <div class="sol-dot"></div>
+                        <p style="margin:0;font-size:0.875rem;color:var(--color-text-secondary);line-height:1.5;"><strong style="color:var(--color-text);">Rappels intelligents</strong> avant les visites : alertes si un prospect voisin n'a pas été contacté depuis longtemps</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer tag -->
+            <div class="reveal" style="margin-top:1.4rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;flex-wrap:wrap;">
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">🗣️ Dictée vocale → CRM automatique</span>
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">📍 Vue carte + optimisation itinéraire</span>
+                <span style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 10px;border-radius:10px;color:var(--color-text-muted);">⏱️ Plus de visites, moins de route</span>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<!-- NAV -->
+<div class="nav-controls">
+    <button class="nav-btn" onclick="changeSlide(-1)">&#8249;</button>
+    <div class="slide-dots" id="dots"></div>
+    <button class="nav-btn" onclick="changeSlide(1)">&#8250;</button>
+    <span class="slide-counter" id="counter">1 / 7</span>
+</div>
+
+<script>
+    let current = 1;
+    const total = document.querySelectorAll('.slide').length;
+    const dotsContainer = document.getElementById('dots');
+    const counter = document.getElementById('counter');
+    for (let i = 1; i <= total; i++) { const dot = document.createElement('div'); dot.className = 'dot' + (i === 1 ? ' active' : ''); dot.onclick = () => goToSlide(i); dotsContainer.appendChild(dot); }
+    function goToSlide(n) {
+        const prev = document.querySelector('.slide.active');
+        const next = document.querySelector(`.slide[data-slide="${n}"]`);
+        if (prev) prev.classList.remove('active');
+        if (next) { next.classList.add('active'); animateSlide(next); }
+        current = n; updateNav();
+    }
+    function changeSlide(dir) { let next = current + dir; if (next < 1) next = total; if (next > total) next = 1; goToSlide(next); }
+    function updateNav() { document.querySelectorAll('.dot').forEach((d, i) => { d.classList.toggle('active', i + 1 === current); }); counter.textContent = current + ' / ' + total; }
+    document.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); } if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); } });
+    let touchStartX = 0, touchStartY = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+        const diffX = touchStartX - e.changedTouches[0].clientX;
+        const diffY = touchStartY - e.changedTouches[0].clientY;
+        // Only trigger slide change if horizontal swipe dominates (not a vertical scroll)
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) changeSlide(diffX > 0 ? 1 : -1);
+    });
+    function animateSlide(slide) {
+        slide.querySelectorAll('.reveal').forEach((el, i) => {
+            el.style.transition = 'none'; el.style.opacity = '0'; el.style.transform = 'translateY(20px)';
+            el.offsetHeight;
+            const delay = i * 0.08;
+            el.style.transition = `opacity 0.38s ease ${delay}s, transform 0.38s ease ${delay}s`;
+            el.style.opacity = '1'; el.style.transform = 'translateY(0px)';
+        });
+    }
+    document.addEventListener('mousemove', (e) => {
+        const spotlight = document.querySelector('.mouse-spotlight');
+        if (spotlight) spotlight.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(192,57,43,0.06), transparent 40%)`;
+    });
+    window.initParticles = function(canvas, options) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+        const interactive = options.interactive !== false;
+        const count = options.count || (interactive ? 45 : 18);
+        let mx = -1000, my = -1000;
+        const particles = Array.from({ length: count }, () => ({
+            x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+            size: Math.random() * 2 + 0.8, alpha: Math.random() * 0.3 + 0.08
+        }));
+        if (interactive) { canvas.addEventListener('mousemove', (e) => { const rect = canvas.getBoundingClientRect(); mx = e.clientX - rect.left; my = e.clientY - rect.top; }); canvas.addEventListener('mouseleave', () => { mx = -1000; my = -1000; }); }
+        (function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                if (interactive) { const dx = p.x - mx, dy = p.y - my, dist = Math.sqrt(dx*dx+dy*dy); if (dist < 120) { const force = (120-dist)/120*2; p.vx += (dx/dist)*force*0.1; p.vy += (dy/dist)*force*0.1; } }
+                p.vx *= 0.98; p.vy *= 0.98; p.x += p.vx; p.y += p.vy;
+                if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(192,57,43,${p.alpha})`; ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        })();
+    };
+    const isMobile = window.innerWidth <= 640;
+    document.querySelectorAll('.particle-canvas').forEach(c => window.initParticles(c, { interactive: !isMobile, count: isMobile ? 18 : 45 }));
+    try { animateSlide(document.querySelector('.slide.active')); } catch(e) {}
+</script>
+</body>
+</html>
