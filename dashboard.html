@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Dashboard Directeur Commercial — Domaine</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
@@ -145,20 +145,120 @@
     .tab-content{display:none;}
     .tab-content.active{display:block;}
 
-    /* ── Responsive ── */
-    @media(max-width:900px){
+
+    /* ══ RESPONSIVE ══ */
+
+    /* Tablet ≤ 1024px */
+    @media(max-width:1024px){
+      .grid-4{grid-template-columns:1fr 1fr;}
+      .grid-2-1{grid-template-columns:1fr;}
+      .grid-1-2{grid-template-columns:1fr;}
+      .pipeline{grid-template-columns:1fr 1fr;}
+      .main{padding:20px;}
+    }
+
+    /* Mobile ≤ 768px */
+    @media(max-width:768px){
+      /* Nav */
+      .topnav{padding:10px 14px;gap:8px;flex-wrap:wrap;}
+      .nav-brand h1{font-size:14px;}
+      .nav-period{display:none;}
+      .nav-btn span{display:none;}
+      .nav-btn{padding:7px 10px;}
+
+      /* Layout */
+      .main{padding:12px;}
       .grid-4{grid-template-columns:1fr 1fr;}
       .grid-3{grid-template-columns:1fr 1fr;}
-      .grid-2-1,.grid-1-2,.grid-2{grid-template-columns:1fr;}
-      .pipeline{grid-template-columns:1fr 1fr;}
-      .main{padding:16px;}
-      .topnav{padding:12px 16px;}
-      .nav-period{display:none;}
+      .grid-2,.grid-2-1,.grid-1-2{grid-template-columns:1fr;}
+      .pipeline{grid-template-columns:1fr 1fr;overflow-x:auto;padding-bottom:4px;}
+
+      /* KPI */
+      .kpi{padding:14px;}
+      .kpi-val{font-size:22px;}
+
+      /* Team table — collapse to cards */
+      .team-table thead{display:none;}
+      .team-table tbody tr{
+        display:flex;flex-direction:column;
+        background:var(--card2);border-radius:10px;
+        margin-bottom:10px;padding:12px;
+      }
+      .team-table td{
+        padding:3px 0;border:none;font-size:13px;
+        display:flex;align-items:center;justify-content:space-between;
+      }
+      .team-table td:first-child{margin-bottom:6px;}
+      .prog-cell{width:100%;}
+      .prog-cell .prog-bar{margin-top:4px;}
+
+      /* Section headers */
+      .section-h{flex-direction:column;align-items:flex-start;gap:4px;}
+
+      /* Tabs */
+      .tabs{width:100%;}
+      .tab{flex:1;text-align:center;padding:7px 4px;}
+
+      /* Alerts */
+      .alert-item{gap:8px;}
+      .alert-time{display:none;}
+
+      /* Activity */
+      .act-time{display:none;}
+
+      /* Pipeline horizontal scroll on mobile */
+      .pipeline{
+        grid-template-columns:repeat(4,80vw);
+        overflow-x:scroll;
+        scroll-snap-type:x mandatory;
+        -webkit-overflow-scrolling:touch;
+        gap:10px;
+      }
+      .pipe-col{scroll-snap-align:start;min-width:0;}
+
+      /* Charts */
+      .chart-wrap{height:160px;}
+
+      /* Modal DC */
+      .modal-dc{padding:12px;align-items:flex-end;}
+      .modal-dc-box{border-radius:16px 16px 0 0;max-height:90vh;}
+
+      /* Modal Rich Comm */
+      .modal-comm-rich{padding:0;align-items:flex-end;}
+      .modal-comm-box{border-radius:20px 20px 0 0;max-height:92vh;max-width:100%;}
+      .mc-stats-grid{grid-template-columns:repeat(3,1fr);}
+      .mc-actions{grid-template-columns:1fr 1fr;}
     }
-    @media(max-width:600px){
-      .grid-4,.grid-3{grid-template-columns:1fr 1fr;}
-      .pipeline{grid-template-columns:1fr;}
+
+    /* Small mobile ≤ 480px */
+    @media(max-width:480px){
+      .grid-4{grid-template-columns:1fr 1fr;}
+      .kpi-val{font-size:20px;}
+      .kpi-label{font-size:9px;}
+
+      /* Pipeline: 1 col visible */
+      .pipeline{
+        grid-template-columns:repeat(4,90vw);
+        gap:8px;
+      }
+
+      /* Nav brand zone text */
+      .nav-brand span{display:none;}
+
+      /* Reduce card padding */
+      .card{padding:14px;}
+      .mc-actions{gap:6px;}
+      .mc-btn{font-size:11px;padding:9px 6px;}
+
+      /* dc-stat-row 2 cols */
+      .dc-stat-row{grid-template-columns:1fr 1fr;}
     }
+
+    /* Scrollbar pipeline */
+    .pipeline::-webkit-scrollbar{height:3px;}
+    .pipeline::-webkit-scrollbar-track{background:transparent;}
+    .pipeline::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
 
     /* ── Modal Commercial Journée ── */
     .modal-comm-rich{
@@ -946,6 +1046,13 @@ function closeDcModal(id, e) {
 }
 
 /* ── Init ── */
+
+/* Mobile pipeline hint */
+if (window.innerWidth <= 768) {
+  const hint = document.getElementById('pipeline-hint');
+  if (hint) hint.style.display = 'block';
+}
+
 window.addEventListener('load', () => {
   updateCharts();
   // Animate progress bars
