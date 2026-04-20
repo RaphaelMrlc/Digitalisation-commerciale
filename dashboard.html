@@ -3,26 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- ═══ PWA SUPPORT ═══ -->
-  <link rel="manifest" href="./manifest.json">
-  <link rel="apple-touch-icon" href="./icon-192.png">
-  <meta name="theme-color" content="#0f0a0e">
   <title>Dashboard Directeur Commercial — Domaine</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg:#0f0a0e; --bg2:#140e12; --card:#1c1219; --card2:#241820;
-      --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
-      --gold:#c9a84c; --gold-l:#f0d080; --gold-dim:rgba(201,168,76,0.12);
-      --red:#8b2035; --red-l:#c0394e; --red-dim:rgba(192,57,78,0.12);
-      --green:#2e7d52; --green-l:#4caf81; --green-dim:rgba(76,175,129,0.12);
-      --blue:#1e4a8b; --blue-l:#5b9cf6; --blue-dim:rgba(91,156,246,0.12);
-      --text:#f0e8e0; --muted:rgba(240,232,224,0.45); --muted2:rgba(240,232,224,0.25);
-      --r:12px; --r-sm:8px;
-    }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-  :root {
       --bg:#0f0a0e; --bg2:#140e12; --card:#1c1219; --card2:#241820;
       --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
       --gold:#c9a84c; --gold-l:#f0d080; --gold-dim:rgba(201,168,76,0.12);
@@ -248,15 +232,12 @@
     .mc-alert{display:flex;align-items:flex-start;gap:8px;background:rgba(192,57,78,.08);border:1px solid rgba(192,57,78,.2);border-radius:8px;padding:10px 12px;margin-bottom:8px;}
     .mc-alert-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
     .mc-alert-text{font-size:12px;line-height:1.4;}
-    /* Ajout CSS bouton push */
-    .push-btn { padding:8px 12px;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:8px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:opacity .2s; }
-    .push-btn:hover { opacity:0.8; }
-    .push-btn.active { background:var(--gold-dim); border-color:var(--gold); color:var(--gold-l); }
+
   </style>
 </head>
 <body>
 
-<!-- ═══ TOP NAV avec BOUTON PUSH AJOUTÉ ═══ -->
+<!-- ── TOP NAV ── -->
 <nav class="topnav">
   <div class="nav-brand">
     <div class="logo">🍷</div>
@@ -272,14 +253,42 @@
       <button class="period-btn" onclick="setPeriod(this,'trim')">Trimestre</button>
     </div>
     <div class="alert-dot" title="3 alertes actives"></div>
-    <!-- ═══ BOUTON PUSH AJOUTÉ ═══ -->
-    <button class="push-btn" id="pushTest" onclick="testPush()" title="Tester notifications push">🔔 Push</button>
     <button class="nav-btn" onclick="alert('Export PDF généré !')">📤 Export</button>
   </div>
 </nav>
 
 <div class="main">
- <div class="grid-2-1">
+
+  <!-- ── KPIs ── -->
+  <div class="grid-4">
+    <div class="kpi" onclick="showModal('ca')">
+      <div class="kpi-label">CA du mois <span>📈</span></div>
+      <div class="kpi-val" style="color:var(--gold)">87 400€</div>
+      <div class="kpi-sub"><span class="trend-up">▲ +12%</span> vs mois dernier</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:72%;background:var(--gold)"></div></div>
+    </div>
+    <div class="kpi" onclick="showModal('objectif')">
+      <div class="kpi-label">Objectif mensuel <span>🎯</span></div>
+      <div class="kpi-val" style="color:var(--blue-l)">72%</div>
+      <div class="kpi-sub">63 000€ / 87 500€ objectif</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:72%;background:var(--blue-l)"></div></div>
+    </div>
+    <div class="kpi" onclick="showModal('pipeline')">
+      <div class="kpi-label">Pipeline actif <span>💼</span></div>
+      <div class="kpi-val" style="color:var(--green-l)">34</div>
+      <div class="kpi-sub">12 chauds · <span class="trend-up">+4 cette semaine</span></div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:55%;background:var(--green-l)"></div></div>
+    </div>
+    <div class="kpi" onclick="showModal('relances')">
+      <div class="kpi-label">Relances en retard <span>⚠️</span></div>
+      <div class="kpi-val" style="color:var(--red-l)">7</div>
+      <div class="kpi-sub"><span class="trend-down">▲ +2</span> vs semaine dernière</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:28%;background:var(--red-l)"></div></div>
+    </div>
+  </div>
+
+  <!-- ── TEAM + ALERTS ── -->
+  <div class="grid-2-1">
 
     <div class="card">
       <div class="section-h">
@@ -548,105 +557,411 @@
     </div>
   </div>
 </div>
- <div class="grid-4">
-    <div class="kpi" onclick="showModal('ca')">
-      <div class="kpi-label">CA du mois <span>📈</span></div>
-      <div class="kpi-val" style="color:var(--gold)">87 400€</div>
-      <div class="kpi-sub"><span class="trend-up">▲ +12%</span> vs mois dernier</div>
-      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:72%;background:var(--gold)"></div></div>
-    </div>
-    <div class="kpi" onclick="showModal('objectif')">
-      <div class="kpi-label">Objectif mensuel <span>🎯</span></div>
-      <div class="kpi-val" style="color:var(--blue-l)">72%</div>
-      <div class="kpi-sub">63 000€ / 87 500€ objectif</div>
-      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:72%;background:var(--blue-l)"></div></div>
-    </div>
-    <div class="kpi" onclick="showModal('pipeline')">
-      <div class="kpi-label">Pipeline actif <span>💼</span></div>
-      <div class="kpi-val" style="color:var(--green-l)">34</div>
-      <div class="kpi-sub">12 chauds · <span class="trend-up">+4 cette semaine</span></div>
-      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:55%;background:var(--green-l)"></div></div>
-    </div>
-    <div class="kpi" onclick="showModal('relances')">
-      <div class="kpi-label">Relances en retard <span>⚠️</span></div>
-      <div class="kpi-val" style="color:var(--red-l)">7</div>
-      <div class="kpi-sub"><span class="trend-down">▲ +2</span> vs semaine dernière</div>
-      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:28%;background:var(--red-l)"></div></div>
-    </div>
-  </div>
-  <div class="grid-4">
-    <!-- Tes 4 KPIs existants -->
-  </div>
-  <!-- ... reste de ton HTML ... -->
-</div>
 
-<!-- ═══ SCRIPT COMPLET (TON JS + PWA) ═══ -->
 <script>
-  // ═══ TES FONCTIONS ORIGINALES ═══
-  function setPeriod(btn, period) {
-    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    // ta logique...
-  }
-  function showModal(type) { /* ta logique modals */ }
-  // ... toutes tes autres fonctions ...
+/* ── Period ── */
+const caData = {
+  sem: { vals:[12400,18200,9800,14600,11200], label:'Cette semaine' },
+  mois: { vals:[68400,72100,81200,87400,0,0], label:'Avril 2026' },
+  trim: { vals:[220000,245000,261000,87400,0,0], label:'T2 2026' },
+};
+let currentPeriod = 'mois';
+function setPeriod(btn, p) {
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentPeriod = p;
+  updateCharts();
+}
 
-  // ═══ NOUVEAU : PWA + PUSH ═══
-  let isSubscribed = false;
+/* ── Charts ── */
+let chartCanal, chartTeam;
+Chart.defaults.color = 'rgba(240,232,224,0.45)';
 
-  async function registerSW() {
-    if ('serviceWorker' in navigator) {
-      try {
-        const reg = await navigator.serviceWorker.register('./sw.js', { scope: './' });
-        console.log('✅ SW enregistré:', reg.scope);
-        initPush(reg);
-        return reg;
-      } catch (err) {
-        console.error('❌ Erreur SW:', err);
-        alert('Service Worker non supporté sur ce navigateur');
+function updateCharts() {
+  if (chartCanal) chartCanal.destroy();
+  const ctx = document.getElementById('chart-ca-canal');
+  chartCanal = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels:['Nov','Déc','Jan','Fév','Mar','Avr'],
+      datasets:[
+        { label:'CHR',    data:[18200,22400,19800,24600,21200,28400], backgroundColor:'rgba(91,156,246,.7)', borderRadius:4, borderSkipped:false },
+        { label:'GMS',    data:[12400,14200,13600,16800,18200,24000], backgroundColor:'rgba(201,168,76,.7)', borderRadius:4, borderSkipped:false },
+        { label:'Export', data:[8600,10400,11200,14200,16800,35000], backgroundColor:'rgba(76,175,129,.7)', borderRadius:4, borderSkipped:false },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'top', labels:{ boxWidth:12, padding:16 } } },
+      scales:{
+        x:{ grid:{ color:'rgba(255,255,255,0.05)' }, ticks:{color:'rgba(240,232,224,0.45)'} },
+        y:{ grid:{ color:'rgba(255,255,255,0.05)' }, ticks:{color:'rgba(240,232,224,0.45)',callback:v=>v/1000+'k'} }
       }
     }
-  }
-
-  async function initPush(reg) {
-    const sub = await reg.pushManager.getSubscription();
-    if (sub) {
-      isSubscribed = true;
-      document.getElementById('pushTest').textContent = '🔔 OK';
-      document.getElementById('pushTest').classList.add('active');
-    }
-  }
-
-  async function testPush() {
-    const reg = await registerSW();
-    if (!reg) return;
-
-    const perm = await Notification.requestPermission();
-    if (perm !== 'granted') {
-      alert('❌ Active les notifications dans Safari');
-      return;
-    }
-
-    // Test notification IMMÉDIATE (fonctionne sans backend)
-    const options = {
-      body: '🔔 Test Dashboard Domaine XYZ\nNouvelle alerte push reçue !',
-      icon: './icon-192.png',
-      badge: './icon-192.png',
-      vibrate: [100, 50, 100],
-      data: { url: './dashboard.html' },
-      actions: [{ action: 'open', title: 'Ouvrir Dashboard' }]
-    };
-
-    reg.showNotification('🔔 Dashboard Actif', options);
-    console.log('📱 Notification test envoyée !');
-  }
-
-  // Auto-init au load
-  window.addEventListener('load', () => {
-    registerSW();
-    // tes init existants...
   });
+}
+
+function buildTeamChart() {
+  const ctx = document.getElementById('chart-ca-team');
+  if (!ctx) return;
+  chartTeam = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels:['Marc','Sophie','Thomas'],
+      datasets:[
+        { label:'CA réalisé', data:[28400,38600,20400], backgroundColor:['rgba(91,156,246,.7)','rgba(76,175,129,.7)','rgba(201,168,76,.7)'], borderRadius:6, borderSkipped:false },
+        { label:'Objectif', data:[39400,44000,37800], backgroundColor:'rgba(255,255,255,0.06)', borderRadius:6, borderSkipped:false }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'top', labels:{ boxWidth:12, padding:12 } } },
+      scales:{
+        x:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{color:'rgba(240,232,224,0.45)'} },
+        y:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{color:'rgba(240,232,224,0.45)',callback:v=>v/1000+'k'} }
+      }
+    }
+  });
+}
+
+/* ── Tabs ── */
+function switchTab(group, tabId) {
+  const map = { equipe: ['tab-team','tab-rdv','tab-ca'] };
+  map[group].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+  });
+  document.getElementById(tabId).classList.add('active');
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.remove('active');
+    if (t.getAttribute('onclick') && t.getAttribute('onclick').includes(tabId)) t.classList.add('active');
+  });
+  if (tabId === 'tab-ca') setTimeout(buildTeamChart, 50);
+}
+
+/* ── Alerts dismiss ── */
+function dismissAlert(el) {
+  el.style.opacity = '0';
+  el.style.height = el.offsetHeight + 'px';
+  el.style.transition = 'opacity .3s, height .3s, padding .3s';
+  setTimeout(() => { el.style.height = '0'; el.style.padding = '0'; }, 300);
+  setTimeout(() => el.remove(), 600);
+}
+
+/* ── Modals ── */
+const commDataRich = {
+  marc: {
+    name:'Marc Dupont', initial:'M', zone:'Paris · CHR & GMS · Île-de-France',
+    color:'var(--blue-l)', colorDim:'rgba(91,156,246,.2)', accent:'#5b9cf6',
+    statut:'En RDV · Caves du Marais',
+    stats:[
+      {num:'16 200€', lbl:'CA potentiel auj.', color:'var(--gold)'},
+      {num:'4/4',     lbl:'RDV du jour',       color:'var(--blue-l)'},
+      {num:'72%',     lbl:'Obj. mensuel',       color:'var(--blue-l)'},
+    ],
+    prog:{ pct:72, done:'28 400€', total:'39 400€', label:'Objectif mensuel' },
+    rdvs:[
+      { time:'10h', name:'Caves du Marais',  meta:'Paris 4e · Obj. 48 btl Cuvée A', badge:'CHR', bc:'badge-chr', done:true },
+      { time:'12h', name:'Monoprix Opéra',   meta:'Paris 9e · Référencement 2 cuvées', badge:'GMS', bc:'badge-gms', done:false },
+      { time:'15h', name:'Le Grand Véfour',  meta:'Paris 1er · Grand Cru 2022',    badge:'CHR', bc:'badge-chr', done:false },
+      { time:'17h', name:'Export Belgique',  meta:'📞 Visio · Devis VI-1',         badge:'Export', bc:'badge-exp', done:false },
+    ],
+    brief:{ client:'Caves du Marais', rows:[
+      { l:'Dernier achat', v:'36 btl · 520€ (22/03)' },
+      { l:'Stock dispo',   v:'Cuvée A : 156 btl' },
+      { l:'Objectif',      v:'48 btl + éch. Cuvée B' },
+      { l:'Note',          v:'Sensible bio, millésimes récents' },
+    ]},
+    alerts:[
+      { txt:'Franprix 11e — 5j sans contact · 1 800€ en jeu' },
+    ],
+    caJour:'4 200€', km:'38 km', relances:2,
+  },
+  sophie: {
+    name:'Sophie Martin', initial:'S', zone:'Lyon · Export & CHR · Sud + International',
+    color:'var(--green-l)', colorDim:'rgba(76,175,129,.2)', accent:'#4caf81',
+    statut:'En déplacement · Négoce Belge',
+    stats:[
+      {num:'22 400€', lbl:'CA potentiel auj.', color:'var(--gold)'},
+      {num:'3/3',     lbl:'RDV du jour',       color:'var(--green-l)'},
+      {num:'88%',     lbl:'Obj. mensuel',       color:'var(--green-l)'},
+    ],
+    prog:{ pct:88, done:'38 600€', total:'44 000€', label:'Objectif mensuel' },
+    rdvs:[
+      { time:'9h',  name:'Caviste Strasbourg', meta:'Déjà visité · 48 btl livrées', badge:'CHR',    bc:'badge-chr', done:true },
+      { time:'11h', name:'Négoce Belge',       meta:'Export · 120 btl Grand Cru',   badge:'Export', bc:'badge-exp', done:false },
+      { time:'15h', name:'Import Asie (visio)',meta:'📞 Japon · 200 btl prospect',  badge:'Export', bc:'badge-exp', done:false },
+    ],
+    brief:{ client:'Négoce Belge', rows:[
+      { l:'Commande potentielle', v:'120 btl Grand Cru' },
+      { l:'Montant estimé',       v:'14 400€' },
+      { l:'Objectif',             v:'Finaliser conditions VI-1' },
+      { l:'Note',                 v:'Relation établie depuis 2023' },
+    ]},
+    alerts:[
+      { txt:'Négoce UK — devis non signé depuis 8j · 7 200€ en jeu' },
+    ],
+    caJour:'4 800€', km:'186 km', relances:1,
+  },
+  thomas: {
+    name:'Thomas Renard', initial:'T', zone:'Bordeaux · GMS · Zone Sud-Ouest',
+    color:'var(--gold)', colorDim:'rgba(201,168,76,.2)', accent:'#c9a84c',
+    statut:'En route · Carrefour Bordeaux',
+    stats:[
+      {num:'9 800€', lbl:'CA potentiel auj.', color:'var(--gold)'},
+      {num:'2/2',    lbl:'RDV du jour',       color:'var(--gold)'},
+      {num:'54%',    lbl:'Obj. mensuel',       color:'var(--red-l)'},
+    ],
+    prog:{ pct:54, done:'20 400€', total:'37 800€', label:'Objectif mensuel — retard à combler' },
+    rdvs:[
+      { time:'14h', name:'Carrefour Bordeaux',  meta:'GMS · 200 btl Cuvée A+B', badge:'GMS', bc:'badge-gms', done:false },
+      { time:'16h', name:'Leclerc Mérignac',    meta:'GMS · Référencement Rosé', badge:'GMS', bc:'badge-gms', done:false },
+    ],
+    brief:{ client:'Carrefour Bordeaux', rows:[
+      { l:'Devis envoyé',   v:'Il y a 12 jours · 3 600€' },
+      { l:'Stock dispo',    v:'Cuvée A : 156 btl · B : 34 btl' },
+      { l:'Objectif',       v:'Signature + 200 btl' },
+      { l:'⚠️ Alerte',      v:'Relance critique — 12j sans réponse' },
+    ]},
+    alerts:[
+      { txt:'Carrefour Bordeaux — 12j sans contact · URGENT · 3 600€' },
+      { txt:'Monoprix Bellecour — 6j sans réponse · 2 400€' },
+      { txt:'Franprix Bègles — relance planifiée dépassée' },
+    ],
+    caJour:'2 100€', km:'42 km', relances:3,
+  },
+};
+
+const commData = {
+  marc: {
+    name:'Marc Dupont', zone:'Paris · CHR & GMS · Zone Île-de-France',
+    stats:[
+      {num:'28 400€',lbl:'CA mois',color:'var(--gold)'},
+      {num:'72%',lbl:'Objectif',color:'var(--blue-l)'},
+      {num:'4',lbl:'RDV auj.',color:'var(--green-l)'},
+      {num:'2',lbl:'Relances',color:'var(--red-l)'},
+    ],
+    rows:[
+      {l:'Dernier RDV',v:'Caves du Marais · 10h auj.'},
+      {l:'Pipeline',v:'12 oppos. · 34 200€ total'},
+      {l:'Relances en retard',v:'2 clients · 4 800€ en jeu'},
+      {l:'Taux conversion',v:'68%'},
+    ]
+  },
+  sophie: {
+    name:'Sophie Martin', zone:'Lyon · Export & CHR · Zone Sud + International',
+    stats:[
+      {num:'38 600€',lbl:'CA mois',color:'var(--gold)'},
+      {num:'88%',lbl:'Objectif',color:'var(--green-l)'},
+      {num:'3',lbl:'RDV auj.',color:'var(--blue-l)'},
+      {num:'1',lbl:'Relances',color:'var(--gold)'},
+    ],
+    rows:[
+      {l:'Dernier RDV',v:'Négoce Belge · en cours'},
+      {l:'Pipeline Export',v:'8 oppos. · 67 400€ total'},
+      {l:'Relances en retard',v:'1 client · Négoce UK 7 200€'},
+      {l:'Taux conversion',v:'74%'},
+    ]
+  },
+  thomas: {
+    name:'Thomas Renard', zone:'Bordeaux · GMS · Zone Sud-Ouest',
+    stats:[
+      {num:'20 400€',lbl:'CA mois',color:'var(--gold)'},
+      {num:'54%',lbl:'Objectif',color:'var(--red-l)'},
+      {num:'2',lbl:'RDV auj.',color:'var(--blue-l)'},
+      {num:'3',lbl:'Relances',color:'var(--red-l)'},
+    ],
+    rows:[
+      {l:'Dernier RDV',v:'En route Carrefour · 14h'},
+      {l:'Pipeline',v:'7 oppos. · 18 200€ total'},
+      {l:'Relances en retard',v:'3 clients — action requise'},
+      {l:'Taux conversion',v:'52%'},
+    ]
+  }
+};
+
+function showCommModal(key) {
+  // legacy fallback — now using rich modal
+  showCommModalRich(key);
+}
+
+function showCommModalRich(key) {
+  const d = commDataRich[key];
+  if (!d) return;
+
+  const progColor = d.prog.pct >= 80 ? 'var(--green-l)' : d.prog.pct >= 60 ? 'var(--gold)' : 'var(--red-l)';
+
+  const rdvHtml = d.rdvs.map(r => `
+    <div class="mc-rdv-item" style="${r.done ? 'opacity:.5' : ''}">
+      <div class="mc-rdv-time">${r.time}</div>
+      <div class="mc-rdv-info">
+        <div class="mc-rdv-name">${r.done ? '✅ ' : ''}${r.name}</div>
+        <div class="mc-rdv-meta">${r.meta}</div>
+      </div>
+      <span class="mc-rdv-badge ${r.bc}">${r.badge}</span>
+    </div>
+  `).join('');
+
+  const briefHtml = d.brief.rows.map(r => `
+    <div class="mc-brief-row">
+      <span class="mc-brief-lbl">${r.l}</span>
+      <span class="mc-brief-val">${r.v}</span>
+    </div>
+  `).join('');
+
+  const alertsHtml = d.alerts.map(a => `
+    <div class="mc-alert">
+      <div class="mc-alert-icon">🚨</div>
+      <div class="mc-alert-text">${a.txt}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('modal-comm-box-inner').innerHTML = `
+    <div class="mc-header">
+      <div class="mc-accent" style="background:${d.accent}"></div>
+      <div class="mc-top">
+        <div class="mc-avatar-lg" style="background:${d.colorDim};color:${d.color}">${d.initial}</div>
+        <div>
+          <div class="mc-name">${d.name}</div>
+          <div class="mc-zone">${d.statut}</div>
+        </div>
+        <button class="mc-close-btn" onclick="closeRichModalDirect()">✕</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">${d.zone}</div>
+    </div>
+
+    <div class="mc-stats-grid">
+      ${d.stats.map(s => `
+        <div class="mc-stat">
+          <div class="mc-stat-num" style="color:${s.color}">${s.num}</div>
+          <div class="mc-stat-lbl">${s.lbl}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="mc-prog-wrap">
+      <div class="mc-prog-lbl">
+        <span>${d.prog.label}</span>
+        <span>${d.prog.done} / ${d.prog.total}</span>
+      </div>
+      <div class="mc-prog-bar">
+        <div class="mc-prog-fill" style="width:${d.prog.pct}%;background:${progColor}"></div>
+      </div>
+    </div>
+
+    <div class="mc-section">
+      <div class="mc-section-title" style="--accent:${d.accent}">Agenda du jour</div>
+      ${rdvHtml}
+    </div>
+
+    <div class="mc-section">
+      <div class="mc-section-title">Prochain RDV — ${d.brief.client}</div>
+      <div class="mc-brief">${briefHtml}</div>
+    </div>
+
+    ${d.alerts.length ? `<div class="mc-section"><div class="mc-section-title">Alertes actives</div>${alertsHtml}</div>` : ''}
+
+    <div class="mc-actions">
+      <button class="mc-btn primary">📱 Ouvrir app ${d.name.split(' ')[0]}</button>
+      <button class="mc-btn blue" onclick="closeRichModalDirect()">📞 Appeler</button>
+      <button class="mc-btn gold" onclick="closeRichModalDirect()">📤 Envoyer rappel</button>
+      <button class="mc-btn green" onclick="closeRichModalDirect()">📊 Rapport semaine</button>
+    </div>
+  `;
+
+  document.getElementById('modal-comm-rich').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Animate progress bar
+  setTimeout(() => {
+    const fill = document.querySelector('.mc-prog-fill');
+    if (fill) { const w = fill.style.width; fill.style.width='0'; setTimeout(()=>fill.style.width=w,50); }
+  }, 100);
+}
+
+function closeRichModal(e) {
+  if (e.target === document.getElementById('modal-comm-rich')) closeRichModalDirect();
+}
+function closeRichModalDirect() {
+  document.getElementById('modal-comm-rich').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+const kpiData = {
+  ca: { title:'CA Mensuel — Avril 2026', sub:'Détail par canal et commercial', body:`
+    <div class="dc-stat-row">
+      <div class="dc-stat"><div class="dc-stat-num" style="color:var(--blue-l)">28 400€</div><div class="dc-stat-lbl">Marc (CHR/GMS)</div></div>
+      <div class="dc-stat"><div class="dc-stat-num" style="color:var(--green-l)">38 600€</div><div class="dc-stat-lbl">Sophie (Export)</div></div>
+    </div>
+    <div class="dc-stat-row" style="margin-bottom:0">
+      <div class="dc-stat"><div class="dc-stat-num" style="color:var(--gold)">20 400€</div><div class="dc-stat-lbl">Thomas (GMS)</div></div>
+      <div class="dc-stat"><div class="dc-stat-num" style="color:var(--text)">87 400€</div><div class="dc-stat-lbl">Total</div></div>
+    </div>
+  `},
+  objectif: { title:'Suivi Objectifs — Avril 2026', sub:'72% de l'objectif mensuel atteint', body:`
+    <div class="dc-row"><span class="dc-lbl">Marc</span><span class="dc-val" style="color:var(--blue-l)">72% · 28 400 / 39 400€</span></div>
+    <div class="dc-row"><span class="dc-lbl">Sophie</span><span class="dc-val" style="color:var(--green-l)">88% · 38 600 / 44 000€</span></div>
+    <div class="dc-row"><span class="dc-lbl">Thomas</span><span class="dc-val" style="color:var(--red-l)">54% · 20 400 / 37 800€</span></div>
+    <div class="dc-row"><span class="dc-lbl">Objectif global</span><span class="dc-val">121 200€</span></div>
+    <div class="dc-row"><span class="dc-lbl">Reste à faire</span><span class="dc-val" style="color:var(--gold)">24 200€ en 10 jours</span></div>
+  `},
+  pipeline: { title:'Pipeline — 34 opportunités actives', sub:'Total estimé : 148 400€', body:`
+    <div class="dc-row"><span class="dc-lbl">Prospection</span><span class="dc-val">8 · ~26 000€</span></div>
+    <div class="dc-row"><span class="dc-lbl">Proposition</span><span class="dc-val">9 · ~44 200€</span></div>
+    <div class="dc-row"><span class="dc-lbl">Négociation</span><span class="dc-val">7 · ~42 400€</span></div>
+    <div class="dc-row"><span class="dc-lbl">Gagné ce mois</span><span class="dc-val" style="color:var(--green-l)">10 · ~35 800€</span></div>
+    <div class="dc-row"><span class="dc-lbl">Taux conversion moyen</span><span class="dc-val">65%</span></div>
+  `},
+  relances: { title:'Relances en retard — 7 clients', sub:'Action requise aujourd'hui', body:`
+    <div class="dc-row"><span class="dc-lbl">Carrefour Bordeaux</span><span class="dc-val" style="color:var(--red-l)">12j · Thomas · 3 600€</span></div>
+    <div class="dc-row"><span class="dc-lbl">Négoce UK</span><span class="dc-val" style="color:var(--gold)">8j · Sophie · 7 200€</span></div>
+    <div class="dc-row"><span class="dc-lbl">Monoprix Bellecour</span><span class="dc-val" style="color:var(--gold)">6j · Thomas · 2 400€</span></div>
+    <div class="dc-row"><span class="dc-lbl">Franprix 11e</span><span class="dc-val">5j · Marc · 1 800€</span></div>
+    <div class="dc-row"><span class="dc-lbl">Total en jeu</span><span class="dc-val" style="color:var(--red-l)">~21 400€</span></div>
+  `},
+};
+
+function showModal(key) {
+  const d = kpiData[key];
+  document.getElementById('mk-title').textContent = d.title;
+  document.getElementById('mk-sub').textContent   = d.sub;
+  document.getElementById('mk-body').innerHTML    = d.body;
+  document.getElementById('modal-kpi').classList.add('open');
+}
+
+function showPipeModal(client, obj, statut, amount, comm, note) {
+  document.getElementById('mp-title').textContent = client;
+  document.getElementById('mp-sub').textContent   = `${comm} · ${statut}`;
+  document.getElementById('mp-body').innerHTML = `
+    <div class="dc-row"><span class="dc-lbl">Objet</span><span class="dc-val">${obj}</span></div>
+    <div class="dc-row"><span class="dc-lbl">Montant</span><span class="dc-val" style="color:var(--gold)">${amount}</span></div>
+    <div class="dc-row"><span class="dc-lbl">Commercial</span><span class="dc-val">${comm}</span></div>
+    <div class="dc-row"><span class="dc-lbl">Statut</span><span class="dc-val">${statut}</span></div>
+    <div class="dc-row"><span class="dc-lbl">Note</span><span class="dc-val">${note}</span></div>
+  `;
+  document.getElementById('modal-pipe').classList.add('open');
+}
+
+function closeDcModal(id, e) {
+  if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('open');
+}
+
+/* ── Init ── */
+window.addEventListener('load', () => {
+  updateCharts();
+  // Animate progress bars
+  document.querySelectorAll('.kpi-bar-fill').forEach(b => {
+    const w = b.style.width; b.style.width='0';
+    setTimeout(() => b.style.width = w, 200);
+  });
+});
 </script>
+
+<!-- ── MODAL COMMERCIAL JOURNÉE ── -->
+<div class="modal-comm-rich" id="modal-comm-rich" onclick="closeRichModal(event)">
+  <div class="modal-comm-box" id="modal-comm-box-inner">
+    <!-- injected dynamically -->
+  </div>
+</div>
 
 </body>
 </html>
