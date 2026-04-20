@@ -22,7 +22,232 @@
     }
     *{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-    /* ... [TOUT TON CSS ORIGINAL ...] ... */
+  :root {
+      --bg:#0f0a0e; --bg2:#140e12; --card:#1c1219; --card2:#241820;
+      --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+      --gold:#c9a84c; --gold-l:#f0d080; --gold-dim:rgba(201,168,76,0.12);
+      --red:#8b2035; --red-l:#c0394e; --red-dim:rgba(192,57,78,0.12);
+      --green:#2e7d52; --green-l:#4caf81; --green-dim:rgba(76,175,129,0.12);
+      --blue:#1e4a8b; --blue-l:#5b9cf6; --blue-dim:rgba(91,156,246,0.12);
+      --text:#f0e8e0; --muted:rgba(240,232,224,0.45); --muted2:rgba(240,232,224,0.25);
+      --r:12px; --r-sm:8px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    /* ── TOP NAV ── */
+    .topnav{
+      position:sticky;top:0;z-index:100;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 28px;background:rgba(15,10,14,0.95);
+      border-bottom:1px solid var(--border);backdrop-filter:blur(12px);
+    }
+    .nav-brand{display:flex;align-items:center;gap:10px;}
+    .nav-brand .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-size:16px;}
+    .nav-brand h1{font-size:16px;font-weight:700;}
+    .nav-brand span{font-size:11px;color:var(--muted);display:block;}
+    .nav-right{display:flex;align-items:center;gap:12px;}
+    .nav-period{display:flex;gap:4px;}
+    .period-btn{padding:6px 14px;border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:20px;font-size:12px;cursor:pointer;transition:all .2s;}
+    .period-btn.active{background:var(--gold-dim);border-color:rgba(201,168,76,.4);color:var(--gold-l);}
+    .alert-dot{width:8px;height:8px;border-radius:50%;background:var(--red-l);animation:blink 2s infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    .nav-btn{padding:8px 16px;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:8px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;}
+
+    /* ── LAYOUT ── */
+    .main{padding:24px 28px;max-width:1400px;margin:0 auto;}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+    .grid-2-1{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:20px;}
+    .grid-1-2{display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:20px;}
+
+    /* ── KPI CARDS ── */
+    .kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;cursor:pointer;transition:border-color .2s;}
+    .kpi:hover{border-color:var(--border2);}
+    .kpi-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+    .kpi-val{font-size:28px;font-weight:700;line-height:1;}
+    .kpi-sub{font-size:11px;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:4px;}
+    .trend-up{color:var(--green-l);} .trend-down{color:var(--red-l);}
+    .kpi-bar{height:3px;background:var(--border);border-radius:3px;margin-top:12px;overflow:hidden;}
+    .kpi-bar-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+
+    /* ── SECTION HEADERS ── */
+    .section-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+    .section-h h2{font-size:13px;font-weight:700;letter-spacing:.04em;}
+    .section-h span{font-size:11px;color:var(--muted);cursor:pointer;}
+
+    /* ── CARD ── */
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;}
+    .card-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+    .card-title::before{content:'';display:block;width:3px;height:12px;border-radius:3px;background:var(--gold);}
+
+    /* ── TEAM TABLE ── */
+    .team-table{width:100%;border-collapse:collapse;}
+    .team-table th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 12px;text-align:left;border-bottom:1px solid var(--border);}
+    .team-table td{padding:12px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle;}
+    .team-table tr:last-child td{border-bottom:none;}
+    .team-table tr{cursor:pointer;transition:background .15s;}
+    .team-table tr:hover td{background:rgba(255,255,255,0.02);}
+    .comm-name{font-weight:700;display:flex;align-items:center;gap:8px;}
+    .avatar{width:28px;height:28px;border-radius:50%;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .prog-cell{width:120px;}
+    .prog-bar{height:4px;background:var(--border);border-radius:4px;overflow:hidden;}
+    .prog-fill{height:100%;border-radius:4px;}
+    .status-pill{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;}
+    .s-active{background:var(--green-dim);color:var(--green-l);}
+    .s-rdv{background:var(--gold-dim);color:var(--gold);}
+    .s-travel{background:var(--blue-dim);color:var(--blue-l);}
+    .s-off{background:var(--border);color:var(--muted);}
+
+    /* ── ALERTS ── */
+    .alert-item{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity .2s;}
+    .alert-item:last-child{border-bottom:none;}
+    .alert-item:hover{opacity:.75;}
+    .alert-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+    .a-red{background:var(--red-dim);}
+    .a-gold{background:var(--gold-dim);}
+    .a-blue{background:var(--blue-dim);}
+    .alert-txt{flex:1;}
+    .alert-title{font-size:13px;font-weight:600;margin-bottom:2px;}
+    .alert-meta{font-size:11px;color:var(--muted);}
+    .alert-time{font-size:10px;color:var(--muted2);white-space:nowrap;}
+
+    /* ── PIPELINE ── */
+    .pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+    .pipe-col{background:var(--card2);border-radius:var(--r);padding:12px;}
+    .pipe-col-h{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between;}
+    .pipe-count{font-size:14px;font-weight:700;}
+    .pipe-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px;margin-bottom:8px;cursor:pointer;transition:border-color .2s;}
+    .pipe-card:hover{border-color:var(--border2);}
+    .pipe-client{font-size:13px;font-weight:600;margin-bottom:3px;}
+    .pipe-meta{font-size:11px;color:var(--muted);}
+    .pipe-amount{font-size:13px;font-weight:700;color:var(--gold);margin-top:6px;}
+    .pipe-card.urgent{border-left:3px solid var(--red-l);}
+    .pipe-card.warm{border-left:3px solid var(--gold);}
+
+    /* ── CHART ── */
+    .chart-wrap{position:relative;height:200px;}
+
+    /* ── RECENT ACTIVITY ── */
+    .activity-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+    .activity-item:last-child{border-bottom:none;}
+    .act-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+    .act-text{font-size:12px;line-height:1.5;}
+    .act-who{font-weight:600;}
+    .act-time{font-size:10px;color:var(--muted);}
+
+    /* ── MODAL DC ── */
+    .modal-dc{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;padding:20px;}
+    .modal-dc.open{opacity:1;pointer-events:all;}
+    .modal-dc-box{background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:24px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;transform:scale(.95);transition:transform .25s;}
+    .modal-dc.open .modal-dc-box{transform:scale(1);}
+    .modal-dc-title{font-size:18px;font-weight:700;margin-bottom:4px;}
+    .modal-dc-sub{font-size:12px;color:var(--muted);margin-bottom:18px;}
+    .dc-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+    .dc-stat{background:var(--card2);border-radius:var(--r-sm);padding:12px;text-align:center;}
+    .dc-stat-num{font-size:20px;font-weight:700;}
+    .dc-stat-lbl{font-size:10px;color:var(--muted);}
+    .dc-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;}
+    .dc-row:last-child{border-bottom:none;}
+    .dc-lbl{color:var(--muted);}
+    .dc-val{font-weight:600;}
+    .dc-close{float:right;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;margin-top:-4px;}
+
+    /* ── Tabs ── */
+    .tabs{display:flex;gap:4px;margin-bottom:18px;background:var(--card2);padding:4px;border-radius:10px;width:fit-content;}
+    .tab{padding:7px 16px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s;}
+    .tab.active{background:var(--card);color:var(--text);}
+    .tab-content{display:none;}
+    .tab-content.active{display:block;}
+
+    /* ── Responsive ── */
+    @media(max-width:900px){
+      .grid-4{grid-template-columns:1fr 1fr;}
+      .grid-3{grid-template-columns:1fr 1fr;}
+      .grid-2-1,.grid-1-2,.grid-2{grid-template-columns:1fr;}
+      .pipeline{grid-template-columns:1fr 1fr;}
+      .main{padding:16px;}
+      .topnav{padding:12px 16px;}
+      .nav-period{display:none;}
+    }
+    @media(max-width:600px){
+      .grid-4,.grid-3{grid-template-columns:1fr 1fr;}
+      .pipeline{grid-template-columns:1fr;}
+    }
+
+    /* ── Modal Commercial Journée ── */
+    .modal-comm-rich{
+      position:fixed;inset:0;z-index:9999;
+      background:rgba(0,0,0,.8);backdrop-filter:blur(8px);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;pointer-events:none;transition:opacity .25s;
+      padding:20px;
+    }
+    .modal-comm-rich.open{opacity:1;pointer-events:all;}
+    .modal-comm-box{
+      background:var(--card);border:1px solid var(--border2);
+      border-radius:20px;width:100%;max-width:440px;
+      max-height:88vh;overflow-y:auto;
+      transform:translateY(20px) scale(.97);
+      transition:transform .3s cubic-bezier(.32,.72,0,1);
+    }
+    .modal-comm-rich.open .modal-comm-box{transform:none;}
+
+    /* Header accent */
+    .mc-header{padding:20px 20px 16px;border-bottom:1px solid var(--border);}
+    .mc-accent{height:3px;border-radius:3px;margin-bottom:14px;}
+    .mc-top{display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+    .mc-avatar-lg{width:44px;height:44px;border-radius:12px;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .mc-name{font-size:18px;font-weight:700;}
+    .mc-zone{font-size:12px;color:var(--muted);}
+    .mc-close-btn{margin-left:auto;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:4px;}
+
+    /* Stats row */
+    .mc-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:16px 20px 0;}
+    .mc-stat{background:var(--card2);border-radius:10px;padding:12px;text-align:center;}
+    .mc-stat-num{font-size:18px;font-weight:700;line-height:1;}
+    .mc-stat-lbl{font-size:10px;color:var(--muted);margin-top:3px;}
+
+    /* Progress bar */
+    .mc-prog-wrap{padding:16px 20px 0;}
+    .mc-prog-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px;}
+    .mc-prog-bar{height:6px;background:var(--border);border-radius:6px;overflow:hidden;}
+    .mc-prog-fill{height:100%;border-radius:6px;transition:width 1s ease;}
+
+    /* Section */
+    .mc-section{padding:16px 20px 0;}
+    .mc-section-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+    .mc-section-title::before{content:'';display:block;width:3px;height:12px;border-radius:3px;background:var(--gold);}
+
+    /* RDV list */
+    .mc-rdv-item{display:flex;align-items:center;gap:10px;background:var(--card2);border-radius:10px;padding:10px 12px;margin-bottom:7px;}
+    .mc-rdv-time{font-size:14px;font-weight:700;min-width:36px;color:var(--text);}
+    .mc-rdv-info{flex:1;}
+    .mc-rdv-name{font-size:13px;font-weight:600;}
+    .mc-rdv-meta{font-size:11px;color:var(--muted);margin-top:1px;}
+    .mc-rdv-badge{font-size:10px;font-weight:700;padding:3px 7px;border-radius:16px;}
+
+    /* Brief client */
+    .mc-brief{background:linear-gradient(135deg,rgba(201,168,76,.09),rgba(201,168,76,.02));border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:12px;margin-bottom:7px;}
+    .mc-brief-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border);}
+    .mc-brief-row:last-child{border-bottom:none;}
+    .mc-brief-lbl{color:var(--muted);}
+    .mc-brief-val{font-weight:600;}
+
+    /* Actions */
+    .mc-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px 20px 20px;}
+    .mc-btn{padding:11px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;text-align:center;border:1px solid var(--border);background:var(--card2);color:var(--text);transition:opacity .2s;}
+    .mc-btn:hover{opacity:.8;}
+    .mc-btn.primary{background:linear-gradient(135deg,var(--red),var(--red-l));border-color:transparent;color:white;grid-column:span 2;}
+    .mc-btn.blue{background:var(--blue-dim);border-color:rgba(91,156,246,.25);color:var(--blue-l);}
+    .mc-btn.gold{background:var(--gold-dim);border-color:rgba(201,168,76,.25);color:var(--gold-l);}
+    .mc-btn.green{background:var(--green-dim);border-color:rgba(76,175,129,.25);color:var(--green-l);}
+
+    /* Alerte dans modal */
+    .mc-alert{display:flex;align-items:flex-start;gap:8px;background:rgba(192,57,78,.08);border:1px solid rgba(192,57,78,.2);border-radius:8px;padding:10px 12px;margin-bottom:8px;}
+    .mc-alert-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+    .mc-alert-text{font-size:12px;line-height:1.4;}
     /* Ajout CSS bouton push */
     .push-btn { padding:8px 12px;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:8px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:opacity .2s; }
     .push-btn:hover { opacity:0.8; }
@@ -54,8 +279,301 @@
 </nav>
 
 <div class="main">
-  <!-- ═══ TOUT TON CONTENU DASHBOARD ORIGINAL ═══ -->
-  <!-- KPIs, Team, Alerts, Pipeline, etc. (copie-colle de ton paste.txt) -->
+ <div class="grid-2-1">
+
+    <div class="card">
+      <div class="section-h">
+        <div class="card-title" style="margin-bottom:0">Équipe commerciale · Aujourd'hui</div>
+        <span onclick="alert('Vue calendrier équipe')">Voir planning →</span>
+      </div>
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('equipe','tab-team')">Équipe</div>
+        <div class="tab" onclick="switchTab('equipe','tab-rdv')">RDV du jour</div>
+        <div class="tab" onclick="switchTab('equipe','tab-ca')">CA individuel</div>
+      </div>
+
+      <div id="tab-team" class="tab-content active">
+        <table class="team-table">
+          <thead><tr>
+            <th>Commercial</th><th>Statut</th><th>RDV</th><th>CA potentiel</th><th>Objectif</th>
+          </tr></thead>
+          <tbody>
+            <tr onclick="showCommModal('marc')">
+              <td><div class="comm-name"><div class="avatar" style="background:rgba(91,156,246,.2);color:var(--blue-l)">M</div>Marc Dupont</div><div style="font-size:11px;color:var(--muted);margin-left:36px;">Paris · CHR/GMS</div></td>
+              <td><span class="status-pill s-rdv">En RDV</span></td>
+              <td style="font-weight:700">4</td>
+              <td style="color:var(--gold);font-weight:700">16 200€</td>
+              <td class="prog-cell"><div class="prog-bar"><div class="prog-fill" style="width:72%;background:var(--blue-l)"></div></div><div style="font-size:10px;color:var(--muted);margin-top:2px">72%</div></td>
+            </tr>
+            <tr onclick="showCommModal('sophie')">
+              <td><div class="comm-name"><div class="avatar" style="background:rgba(76,175,129,.2);color:var(--green-l)">S</div>Sophie Martin</div><div style="font-size:11px;color:var(--muted);margin-left:36px;">Lyon · Export</div></td>
+              <td><span class="status-pill s-active">En déplacement</span></td>
+              <td style="font-weight:700">3</td>
+              <td style="color:var(--gold);font-weight:700">22 400€</td>
+              <td class="prog-cell"><div class="prog-bar"><div class="prog-fill" style="width:88%;background:var(--green-l)"></div></div><div style="font-size:10px;color:var(--muted);margin-top:2px">88%</div></td>
+            </tr>
+            <tr onclick="showCommModal('thomas')">
+              <td><div class="comm-name"><div class="avatar" style="background:rgba(201,168,76,.2);color:var(--gold)">T</div>Thomas Renard</div><div style="font-size:11px;color:var(--muted);margin-left:36px;">Bordeaux · GMS</div></td>
+              <td><span class="status-pill s-travel">En route</span></td>
+              <td style="font-weight:700">2</td>
+              <td style="color:var(--gold);font-weight:700">9 800€</td>
+              <td class="prog-cell"><div class="prog-bar"><div class="prog-fill" style="width:54%;background:var(--gold)"></div></div><div style="font-size:10px;color:var(--muted);margin-top:2px">54%</div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="tab-rdv" class="tab-content">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:var(--card2);border-radius:var(--r-sm);padding:10px 12px;font-size:13px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><strong>Marc — Caves du Marais</strong><span style="color:var(--blue-l)">10h00</span></div>
+            <div style="color:var(--muted);font-size:11px;">Paris 4e · CHR · Objectif 48 btl</div>
+          </div>
+          <div style="background:var(--card2);border-radius:var(--r-sm);padding:10px 12px;font-size:13px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><strong>Sophie — Négoce Belge</strong><span style="color:var(--green-l)">11h30</span></div>
+            <div style="color:var(--muted);font-size:11px;">Export · Devis VI-1 · Objectif 120 btl</div>
+          </div>
+          <div style="background:var(--card2);border-radius:var(--r-sm);padding:10px 12px;font-size:13px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><strong>Marc — Monoprix Opéra</strong><span style="color:var(--blue-l)">12h00</span></div>
+            <div style="color:var(--muted);font-size:11px;">Paris 9e · GMS · Référencement 2 cuvées</div>
+          </div>
+          <div style="background:var(--card2);border-radius:var(--r-sm);padding:10px 12px;font-size:13px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><strong>Thomas — Carrefour Bordeaux</strong><span style="color:var(--gold)">14h00</span></div>
+            <div style="color:var(--muted);font-size:11px;">GMS · Référencement 3 cuvées · Objectif 200 btl</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-ca" class="tab-content">
+        <div class="chart-wrap"><canvas id="chart-ca-team"></canvas></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Alertes & Actions requises</div>
+      <div class="alert-item" onclick="dismissAlert(this)">
+        <div class="alert-icon a-red">🚨</div>
+        <div class="alert-txt">
+          <div class="alert-title">Relance oubliée — Carrefour Lyon</div>
+          <div class="alert-meta">Thomas · 12 jours sans contact · 3 400€ en jeu</div>
+        </div>
+        <div class="alert-time">Il y a 2h</div>
+      </div>
+      <div class="alert-item" onclick="dismissAlert(this)">
+        <div class="alert-icon a-gold">⏳</div>
+        <div class="alert-txt">
+          <div class="alert-title">Devis non signé — Négoce UK</div>
+          <div class="alert-meta">Sophie · Envoyé il y a 8 jours · 7 200€</div>
+        </div>
+        <div class="alert-time">Hier</div>
+      </div>
+      <div class="alert-item" onclick="dismissAlert(this)">
+        <div class="alert-icon a-red">📦</div>
+        <div class="alert-txt">
+          <div class="alert-title">Stock Cuvée B critique</div>
+          <div class="alert-meta">34 btl restantes · 3 devis en attente</div>
+        </div>
+        <div class="alert-time">Ce matin</div>
+      </div>
+      <div class="alert-item" onclick="dismissAlert(this)">
+        <div class="alert-icon a-blue">📋</div>
+        <div class="alert-txt">
+          <div class="alert-title">Compte rendu manquant</div>
+          <div class="alert-meta">Marc · Grand Véfour · Visite hier 15h</div>
+        </div>
+        <div class="alert-time">Hier 18h</div>
+      </div>
+      <div class="alert-item" onclick="dismissAlert(this)">
+        <div class="alert-icon a-gold">💼</div>
+        <div class="alert-txt">
+          <div class="alert-title">Prospect chaud non suivi</div>
+          <div class="alert-meta">Galeries Lafayette · Contact initial il y a 5j</div>
+        </div>
+        <div class="alert-time">5j</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PIPELINE ── -->
+  <div class="section-h">
+    <h2>📊 Pipeline Commercial</h2>
+    <span onclick="alert('Vue tableau complète')">Voir tout →</span>
+  </div>
+  <div class="pipeline">
+    <div class="pipe-col">
+      <div class="pipe-col-h"><span>Prospection</span><span class="pipe-count">8</span></div>
+      <div class="pipe-card" onclick="showPipeModal('Galeries Lafayette','Référencement 3 cuvées premium','Prospect','~4 800€','Marc','Nouveau contact')">
+        <div class="pipe-client">Galeries Lafayette</div>
+        <div class="pipe-meta">Marc · Paris 9e · GMS</div>
+        <div class="pipe-amount">~4 800€</div>
+      </div>
+      <div class="pipe-card" onclick="showPipeModal('Brasserie Lipp','Carte d\'été vins bio','Prospect','~2 400€','Marc','Contact à qualifier')">
+        <div class="pipe-client">Brasserie Lipp</div>
+        <div class="pipe-meta">Marc · Paris 6e · CHR</div>
+        <div class="pipe-amount">~2 400€</div>
+      </div>
+      <div class="pipe-card" onclick="showPipeModal('Import Japon','Export 200 btl Grand Cru','Prospect','~18 000€','Sophie','Email initial envoyé')">
+        <div class="pipe-client">Import Japon</div>
+        <div class="pipe-meta">Sophie · Export · Asie</div>
+        <div class="pipe-amount">~18 000€</div>
+      </div>
+    </div>
+    <div class="pipe-col">
+      <div class="pipe-col-h"><span>Proposition</span><span class="pipe-count">9</span></div>
+      <div class="pipe-card warm" onclick="showPipeModal('Monoprix Opéra','Référencement 2 cuvées rayon premium','Proposition envoyée','1 400€','Marc','RDV aujourd\'hui 12h')">
+        <div class="pipe-client">Monoprix Opéra</div>
+        <div class="pipe-meta">Marc · Paris 9e · GMS</div>
+        <div class="pipe-amount">1 400€</div>
+      </div>
+      <div class="pipe-card urgent" onclick="showPipeModal('Carrefour Bordeaux','200 btl Cuvée A + B','Devis envoyé','3 600€','Thomas','Relance urgente — 12j sans réponse')">
+        <div class="pipe-client">Carrefour Bordeaux 🔴</div>
+        <div class="pipe-meta">Thomas · GMS · Urgent</div>
+        <div class="pipe-amount">3 600€</div>
+      </div>
+      <div class="pipe-card" onclick="showPipeModal('Négoce UK','Export 300 btl VI-1','Devis envoyé il y a 8j','7 200€','Sophie','Relance à faire aujourd\'hui')">
+        <div class="pipe-client">Négoce UK</div>
+        <div class="pipe-meta">Sophie · Export · Relance</div>
+        <div class="pipe-amount">7 200€</div>
+      </div>
+    </div>
+    <div class="pipe-col">
+      <div class="pipe-col-h"><span>Négociation</span><span class="pipe-count">7</span></div>
+      <div class="pipe-card warm" onclick="showPipeModal('Caves du Marais','48 btl Cuvée A + éch. B','Négociation','864€','Marc','RDV aujourd\'hui 10h — très chaud')">
+        <div class="pipe-client">Caves du Marais</div>
+        <div class="pipe-meta">Marc · Paris 4e · CHR</div>
+        <div class="pipe-amount">864€</div>
+      </div>
+      <div class="pipe-card warm" onclick="showPipeModal('Négoce Belge','120 btl Grand Cru export','En négociation','14 400€','Sophie','Conditions VI-1 à finaliser')">
+        <div class="pipe-client">Négoce Belge</div>
+        <div class="pipe-meta">Sophie · Export · Actif</div>
+        <div class="pipe-amount">14 400€</div>
+      </div>
+    </div>
+    <div class="pipe-col">
+      <div class="pipe-col-h"><span>Gagné ce mois</span><span class="pipe-count">10</span></div>
+      <div class="pipe-card" style="border-left:3px solid var(--green-l)" onclick="showPipeModal('Le Grand Véfour','Grand Cru 2022 — 12 btl','Commande signée ✅','2 640€','Marc','Livraison vendredi')">
+        <div class="pipe-client" style="color:var(--green-l)">✅ Le Grand Véfour</div>
+        <div class="pipe-meta">Marc · Paris 1er · CHR</div>
+        <div class="pipe-amount">2 640€</div>
+      </div>
+      <div class="pipe-card" style="border-left:3px solid var(--green-l)" onclick="showPipeModal('Supermarché U Lyon','Cuvée A × 300 btl — GMS','Commande signée ✅','5 400€','Thomas','Livré le 14/04')">
+        <div class="pipe-client" style="color:var(--green-l)">✅ Supermarché U Lyon</div>
+        <div class="pipe-meta">Thomas · GMS · Livré</div>
+        <div class="pipe-amount">5 400€</div>
+      </div>
+      <div class="pipe-card" style="border-left:3px solid var(--green-l)" onclick="showPipeModal('Caviste Strasbourg','Cuvée B × 48 btl','Commande signée ✅','1 344€','Sophie','Livré le 10/04')">
+        <div class="pipe-client" style="color:var(--green-l)">✅ Caviste Strasbourg</div>
+        <div class="pipe-meta">Sophie · CHR</div>
+        <div class="pipe-amount">1 344€</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CHARTS + ACTIVITY ── -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">CA mensuel par canal (6 mois)</div>
+      <div class="chart-wrap"><canvas id="chart-ca-canal"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Activité récente de l'équipe</div>
+      <div class="activity-item">
+        <div class="act-dot" style="background:var(--blue-l)"></div>
+        <div><div class="act-text"><span class="act-who">Marc</span> — CR visite Caves du Marais · 48 btl Cuvée A commandées</div><div class="act-time">Il y a 45min</div></div>
+      </div>
+      <div class="activity-item">
+        <div class="act-dot" style="background:var(--green-l)"></div>
+        <div><div class="act-text"><span class="act-who">Sophie</span> — Devis envoyé Négoce Belge · 14 400€</div><div class="act-time">Il y a 1h20</div></div>
+      </div>
+      <div class="activity-item">
+        <div class="act-dot" style="background:var(--gold)"></div>
+        <div><div class="act-text"><span class="act-who">Thomas</span> — En route Carrefour Bordeaux · arrivée 14h</div><div class="act-time">Il y a 2h</div></div>
+      </div>
+      <div class="activity-item">
+        <div class="act-dot" style="background:var(--green-l)"></div>
+        <div><div class="act-text"><span class="act-who">Sophie</span> — RDV Négoce Belge démarré · brief chargé</div><div class="act-time">Il y a 2h30</div></div>
+      </div>
+      <div class="activity-item">
+        <div class="act-dot" style="background:var(--blue-l)"></div>
+        <div><div class="act-text"><span class="act-who">Marc</span> — Journée démarrée · 4 RDV · 16 200€ CA potentiel</div><div class="act-time">Ce matin 8h45</div></div>
+      </div>
+      <div class="activity-item">
+        <div class="act-dot" style="background:var(--red-l)"></div>
+        <div><div class="act-text"><span class="act-who">Système</span> — Stock Cuvée B critique : 34 btl restantes</div><div class="act-time">Ce matin 8h00</div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ── MODAL COMM ── -->
+<div class="modal-dc" id="modal-comm" onclick="closeDcModal('modal-comm',event)">
+  <div class="modal-dc-box">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+      <div>
+        <div class="modal-dc-title" id="mc-name"></div>
+        <div class="modal-dc-sub" id="mc-zone"></div>
+      </div>
+      <button class="dc-close" onclick="document.getElementById('modal-comm').classList.remove('open')">✕</button>
+    </div>
+    <div class="dc-stat-row" id="mc-stats"></div>
+    <div id="mc-rows"></div>
+    <div style="margin-top:16px;display:flex;gap:8px;">
+      <button style="flex:1;padding:11px;background:var(--blue-dim);border:1px solid rgba(91,156,246,.25);color:var(--blue-l);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">📱 Contacter</button>
+      <button style="flex:1;padding:11px;background:var(--gold-dim);border:1px solid rgba(201,168,76,.25);color:var(--gold-l);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">📊 Rapport</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL KPI ── -->
+<div class="modal-dc" id="modal-kpi" onclick="closeDcModal('modal-kpi',event)">
+  <div class="modal-dc-box">
+    <button class="dc-close" onclick="document.getElementById('modal-kpi').classList.remove('open')">✕</button>
+    <div class="modal-dc-title" id="mk-title"></div>
+    <div class="modal-dc-sub" id="mk-sub"></div>
+    <div id="mk-body" style="margin-top:16px;"></div>
+  </div>
+</div>
+
+<!-- ── MODAL PIPE ── -->
+<div class="modal-dc" id="modal-pipe" onclick="closeDcModal('modal-pipe',event)">
+  <div class="modal-dc-box">
+    <button class="dc-close" onclick="document.getElementById('modal-pipe').classList.remove('open')">✕</button>
+    <div class="modal-dc-title" id="mp-title"></div>
+    <div class="modal-dc-sub" id="mp-sub"></div>
+    <div id="mp-body" style="margin-top:16px;"></div>
+    <div style="margin-top:16px;display:flex;gap:8px;">
+      <button style="flex:1;padding:11px;background:var(--green-dim);border:1px solid rgba(76,175,129,.25);color:var(--green-l);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600" onclick="document.getElementById('modal-pipe').classList.remove('open')">✅ Marquer Gagné</button>
+      <button style="flex:1;padding:11px;background:var(--gold-dim);border:1px solid rgba(201,168,76,.25);color:var(--gold-l);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600" onclick="document.getElementById('modal-pipe').classList.remove('open')">📋 Voir Devis</button>
+    </div>
+  </div>
+</div>
+ <div class="grid-4">
+    <div class="kpi" onclick="showModal('ca')">
+      <div class="kpi-label">CA du mois <span>📈</span></div>
+      <div class="kpi-val" style="color:var(--gold)">87 400€</div>
+      <div class="kpi-sub"><span class="trend-up">▲ +12%</span> vs mois dernier</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:72%;background:var(--gold)"></div></div>
+    </div>
+    <div class="kpi" onclick="showModal('objectif')">
+      <div class="kpi-label">Objectif mensuel <span>🎯</span></div>
+      <div class="kpi-val" style="color:var(--blue-l)">72%</div>
+      <div class="kpi-sub">63 000€ / 87 500€ objectif</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:72%;background:var(--blue-l)"></div></div>
+    </div>
+    <div class="kpi" onclick="showModal('pipeline')">
+      <div class="kpi-label">Pipeline actif <span>💼</span></div>
+      <div class="kpi-val" style="color:var(--green-l)">34</div>
+      <div class="kpi-sub">12 chauds · <span class="trend-up">+4 cette semaine</span></div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:55%;background:var(--green-l)"></div></div>
+    </div>
+    <div class="kpi" onclick="showModal('relances')">
+      <div class="kpi-label">Relances en retard <span>⚠️</span></div>
+      <div class="kpi-val" style="color:var(--red-l)">7</div>
+      <div class="kpi-sub"><span class="trend-down">▲ +2</span> vs semaine dernière</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:28%;background:var(--red-l)"></div></div>
+    </div>
+  </div>
   <div class="grid-4">
     <!-- Tes 4 KPIs existants -->
   </div>
